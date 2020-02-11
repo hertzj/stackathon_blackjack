@@ -6,28 +6,47 @@ import {
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
 
-const initialState = {
+export interface ScoreState {
+  playerScore: number;
+  dealerScore: number;
+  playerSplitScore: number;
+  playerBust: boolean;
+  dealerBust: boolean;
+  playerSplitBust: boolean;
+}
+
+const initialState: ScoreState = {
   playerScore: 0,
   dealerScore: 0,
   playerSplitScore: 0,
+  playerBust: false,
+  dealerBust: false,
+  playerSplitBust: false,
 };
 
 // action creator
-export const updateScore = (playerName: string, score: number) => {
+export const updateScore = (
+  playerName: string,
+  score: number,
+  busted: boolean
+) => {
   if (playerName === 'dealer') {
     return {
       type: UPDATE_DEALER_SCORE,
       score,
+      busted,
     };
   } else if (playerName === 'split') {
     return {
       type: UPDATE_SPLIT_SCORE,
       score,
+      busted,
     };
   } else {
     return {
       type: UPDATE_PLAYER_SCORE,
       score,
+      busted,
     };
   }
 };
@@ -68,7 +87,10 @@ export const getValue = (playerName: string) => {
       acc += Number(num);
       return acc;
     }, 0);
-    dispatch(updateScore(playerName, value));
+    if (value > 21) {
+      return dispatch(updateScore(playerName, value, true));
+    }
+    dispatch(updateScore(playerName, value, false));
   };
 };
 
@@ -80,18 +102,21 @@ const scoreReducer = (state = initialState, action: any) => {
       return {
         ...state,
         playerScore: action.score,
+        playerBust: action.busted,
       };
     }
     case UPDATE_SPLIT_SCORE: {
       return {
         ...state,
         playerSplitScore: action.score,
+        playerSplitBust: action.busted,
       };
     }
     case UPDATE_DEALER_SCORE:
       return {
         ...state,
         dealerScore: action.score,
+        dealerBust: action.busted,
       };
     default:
       return state;
