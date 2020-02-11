@@ -78,7 +78,7 @@ const handsReducer = (state = initialState, action: HandsAction) => {
       };
     }
     default:
-      return initialState;
+      return state;
   }
 };
 

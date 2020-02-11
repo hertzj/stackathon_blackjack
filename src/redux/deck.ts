@@ -107,7 +107,7 @@ const deckReducer = (state = initialState, action: DeckAction) => {
     case DEAL_CARD:
       return action.cards;
     default:
-      return initialState;
+      return state;
   }
 };
 

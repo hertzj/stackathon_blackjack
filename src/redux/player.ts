@@ -20,7 +20,7 @@ const playerReducer = (state = initialState, action: NameAction) => {
       return action.name;
     }
     default:
-      return initialState;
+      return state;
   }
 };
 

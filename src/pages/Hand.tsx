@@ -90,24 +90,23 @@ class Hand extends Component<any, MyState> {
   };
 
   render() {
-    const { hands } = this.props;
-    // will change this to be just a passed in prop later
     const { name } = this.props;
-    if (!hands)
-      return (
-        <IonPage>
-          <IonContent>loading...</IonContent>
-        </IonPage>
-      );
-    else if (name === 'dealer') {
-      const { dealerHand } = hands;
-      const { cards } = dealerHand;
+    console.log(this.props);
+    if (name === 'dealer') {
+      const { dealerHand } = this.props;
+      if (!dealerHand.length) {
+        return (
+          <IonPage>
+            <IonContent>loading...</IonContent>
+          </IonPage>
+        );
+      }
       return (
         <IonPage>
           <IonContent>
             <IonGrid>
               <IonRow>
-                {cards.map((card: PlayerCard) => {
+                {dealerHand.map((card: PlayerCard) => {
                   const { value } = card;
                   const suit = value.slice(0, 1);
                   const cardVal = value.slice(1);
@@ -124,14 +123,20 @@ class Hand extends Component<any, MyState> {
       );
     } else {
       // need to handle splitting
-      const { playerHand } = hands;
-      const { cards } = playerHand;
+      const { playerHand } = this.props;
+      if (!playerHand.length) {
+        return (
+          <IonPage>
+            <IonContent>loading...</IonContent>
+          </IonPage>
+        );
+      }
       return (
         <IonPage>
           <IonContent>
             <IonGrid>
               <IonRow>
-                {cards.map((card: PlayerCard) => {
+                {playerHand.map((card: PlayerCard) => {
                   const { value } = card;
                   const suit = value.slice(0, 1);
                   const cardVal = value.slice(1);
