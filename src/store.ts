@@ -5,11 +5,6 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 // import thunk from 'redux-thunk';
 
-// not sure what extra argument should be?
-// check docs
-// let middleWare = [thunkMiddleware.withExtraArgument(false)];
-
-// // @ts-ignore
 // if (process.browser) {
 //   middleWare = [...middleWare, createLogger({ collapsed: true })];
 // }
