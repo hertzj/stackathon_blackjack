@@ -17,7 +17,6 @@ const Home: React.FC = () => {
   //@ts-ignore
   const deck = useSelector(state => state.deck);
   const dispatch = useDispatch();
-  console.log(deck);
   return (
     <IonPage>
       <IonHeader>

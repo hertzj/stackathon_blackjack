@@ -12,7 +12,7 @@ interface HandsAction {
   card?: PlayerCard;
 }
 
-interface PlayerCard {
+export interface PlayerCard {
   value: string;
   faceUp: boolean;
 }

@@ -1,7 +1,7 @@
 import { INITIAL_DEAL, DEAL_CARD } from './constants';
 import { setPlayerHand, setDealerHand, hitDealer, hitPlayer } from './hands';
-import { shuffle, fullDeck } from '../utils';
-// import { getValue } from './score';
+import { shuffle, fullDeck, PlayerCard } from '../utils';
+import { getValue } from './score';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
@@ -66,34 +66,40 @@ export const initialDeal = (
     dispatch(setPlayerHand(playerCards));
     dispatch(setDealerHand(dealerCards));
     dispatch(initialDealActionCreator(shuffledDeck));
-    // dispatch(getValue('dealer'));
-    // dispatch(getValue(playerName));
+    dispatch(getValue('dealer'));
+    dispatch(getValue(playerName));
   };
 };
 
-export const hitParticipant = (participant: string) => {
+export const hitParticipant = (
+  participant: string
+): ThunkAction<void, RootState, unknown, Action> => {
   if (participant === 'dealer') {
-    return (dispatch: any, getState: any) => {
-      const deck = getState().deck;
-      const card = deck.pop();
-      const newCard = {
+    return (dispatch, getState) => {
+      const deck: Deck = getState().deck;
+      //@ts-ignore
+      const card: Card = deck.pop();
+      const newCard: PlayerCard = {
         value: card,
         faceUp: true,
       };
       dispatch(hitDealer(newCard));
       dispatch(dealCardActionCreator(deck));
+      dispatch(getValue('dealer'));
     };
   } else {
     // need to deal with splitting
-    return (dispatch: any, getState: any) => {
-      const deck = getState().deck;
-      const card = deck.pop();
-      const newCard = {
+    return (dispatch, getState) => {
+      const deck: Deck = getState().deck;
+      // @ts-ignore
+      const card: Card = deck.pop();
+      const newCard: PlayerCard = {
         value: card,
         faceUp: true,
       };
       dispatch(hitPlayer(newCard));
       dispatch(dealCardActionCreator(deck));
+      dispatch(getValue(getState().player));
     };
   }
 };

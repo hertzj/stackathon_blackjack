@@ -38,60 +38,14 @@ class Hand extends Component<any, MyState> {
     };
   }
 
-  // ionViewWillEnter() {
-  //   const { hands } = this.props;
-  //   const { name } = this.props;
-
-  //   if (name === 'dealer') {
-  //     const { dealerHand } = hands;
-  //     this.setState({
-  //       cards: dealerHand,
-  //       name,
-  //     });
-  //   } else {
-  //     const { playerHand } = hands;
-  //     this.setState({
-  //       cards: playerHand,
-  //       name,
-  //     });
-  //   }
-  // }
-
-  // value = () => {
-  //   // should probably handle this in the redux store
-  //   const { cards } = this.state;
-  //   const mapRoyalToVal: { [key in Royals]: number } = {
-  //     J: 10,
-  //     Q: 10,
-  //     K: 10,
-  //     A: 11,
-  //   };
-  //   const royalKeys = Object.keys(mapRoyalToVal) as Royals[];
-  //   const value = cards.reduce((acc: number, card: PlayerCard) => {
-  //     const cardVal = card.value.slice(1) as Royals; // a little worried about this as Royals
-  //     let num: string | number = cardVal;
-  //     if (acc > 21 && royalKeys.indexOf(cardVal) === 4) {
-  //       num = '1';
-  //     } else if (royalKeys.indexOf(cardVal) === 4 && acc + 11 > 21) {
-  //       num = '1';
-  //     } else if (royalKeys.indexOf(cardVal) > -1) {
-  //       num = mapRoyalToVal[cardVal];
-  //     }
-  //     acc += Number(num);
-  //     return acc;
-  //   }, 0);
-  //   this.setState({ value });
-  // };
-
   // need check pair and split
   hit = () => {
-    const { name } = this.state;
+    const { name } = this.props;
     this.props.hitParticipant(name);
   };
 
   render() {
     const { name } = this.props;
-    console.log(this.props);
     if (name === 'dealer') {
       const { dealerHand } = this.props;
       if (!dealerHand.length) {
@@ -106,12 +60,12 @@ class Hand extends Component<any, MyState> {
           <IonContent>
             <IonGrid>
               <IonRow>
-                {dealerHand.map((card: PlayerCard) => {
+                {dealerHand.map((card: PlayerCard, idx: number) => {
                   const { value } = card;
                   const suit = value.slice(0, 1);
                   const cardVal = value.slice(1);
                   return (
-                    <IonCol>
+                    <IonCol key={idx}>
                       <Card rank={cardVal} suit={suit} />
                     </IonCol>
                   );
@@ -136,18 +90,21 @@ class Hand extends Component<any, MyState> {
           <IonContent>
             <IonGrid>
               <IonRow>
-                {playerHand.map((card: PlayerCard) => {
+                {playerHand.map((card: PlayerCard, idx: number) => {
                   const { value } = card;
                   const suit = value.slice(0, 1);
                   const cardVal = value.slice(1);
                   return (
-                    <IonCol>
+                    <IonCol key={idx}>
                       <Card rank={cardVal} suit={suit} />
                     </IonCol>
                   );
                 })}
               </IonRow>
             </IonGrid>
+            <IonFab vertical="bottom" horizontal="center" slot="fixed">
+              <IonFabButton onClick={() => this.hit()}>Hit me!</IonFabButton>
+            </IonFab>
           </IonContent>
         </IonPage>
       );

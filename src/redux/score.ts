@@ -1,8 +1,8 @@
 import {
   RESET_SCORE,
-  HIT_PLAYER,
-  HIT_DEALER,
-  HIT_SPLIT_PLAYER,
+  UPDATE_DEALER_SCORE,
+  UPDATE_PLAYER_SCORE,
+  UPDATE_SPLIT_SCORE,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
 
@@ -16,17 +16,17 @@ const initialState = {
 export const updateScore = (playerName: string, score: number) => {
   if (playerName === 'dealer') {
     return {
-      type: HIT_DEALER,
+      type: UPDATE_DEALER_SCORE,
       score,
     };
   } else if (playerName === 'split') {
     return {
-      type: HIT_SPLIT_PLAYER,
+      type: UPDATE_SPLIT_SCORE,
       score,
     };
   } else {
     return {
-      type: HIT_PLAYER,
+      type: UPDATE_PLAYER_SCORE,
       score,
     };
   }
@@ -76,25 +76,25 @@ const scoreReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case RESET_SCORE:
       return initialState;
-    case HIT_PLAYER: {
+    case UPDATE_PLAYER_SCORE: {
       return {
         ...state,
         playerScore: action.score,
       };
     }
-    case HIT_SPLIT_PLAYER: {
+    case UPDATE_SPLIT_SCORE: {
       return {
         ...state,
         playerSplitScore: action.score,
       };
     }
-    case HIT_DEALER:
+    case UPDATE_DEALER_SCORE:
       return {
         ...state,
         dealerScore: action.score,
       };
     default:
-      return initialState;
+      return state;
   }
 };
 
