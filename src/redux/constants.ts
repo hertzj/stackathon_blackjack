@@ -1,0 +1,10 @@
+export const SHUFFLE = Symbol('Shuffle');
+export const INITIAL_DEAL = Symbol('initial_deal');
+export const DEAL_CARD = Symbol('deal_single_card');
+export const SET_PLAYER_HAND = Symbol('SET_PLAYER_HAND');
+export const SET_DEALER_HAND = Symbol('Set_dealer_hand');
+export const HIT_PLAYER = Symbol('HIT_PLAYER');
+export const HIT_SPLIT_PLAYER = Symbol('HIT_SPLIT_PLAYER');
+export const HIT_DEALER = Symbol('HIT_DEALER');
+export const SET_PLAYER_NAME = Symbol('set_player_name');
+export const RESET_SCORE = Symbol('reset_score');
