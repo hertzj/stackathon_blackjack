@@ -11,3 +11,4 @@ export const RESET_SCORE = Symbol('reset_score');
 export const UPDATE_DEALER_SCORE = Symbol('dealer_score_update');
 export const UPDATE_PLAYER_SCORE = Symbol('player_score_update');
 export const UPDATE_SPLIT_SCORE = Symbol('split_score_update');
+export const SET_WINNER = Symbol('set_winner');

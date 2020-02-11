@@ -32,6 +32,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import Hand from './pages/Hand';
+import Board from './pages/Board';
 
 const App: React.FC = () => (
   <IonApp>
@@ -40,7 +41,8 @@ const App: React.FC = () => (
         <IonRouterOutlet>
           <Route path="/tab1" component={Home} exact={true} />
           <Route path="/tab2" component={Hand} exact={true} />
-          <Route exact path="/" render={() => <Redirect to="/home" />} />
+          <Route path="/tab3" component={Board} exact={true} />
+          <Route exact path="/" render={() => <Redirect to="/tab1" />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
@@ -50,6 +52,10 @@ const App: React.FC = () => (
           <IonTabButton tab="tab2" href="/tab2">
             <IonIcon icon={apps} />
             <IonLabel>Hand</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="tab3" href="/tab3">
+            <IonIcon icon={apps} />
+            <IonLabel>Board</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>

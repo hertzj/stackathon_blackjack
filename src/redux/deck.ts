@@ -1,10 +1,17 @@
 import { INITIAL_DEAL, DEAL_CARD } from './constants';
-import { setPlayerHand, setDealerHand, hitDealer, hitPlayer } from './hands';
+import {
+  setPlayerHand,
+  setDealerHand,
+  hitDealer,
+  hitPlayer,
+  flipCard,
+} from './hands';
 import { shuffle, fullDeck, PlayerCard } from '../utils';
 import { getValue } from './score';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
+import { findWinner } from './result';
 
 export type Card = string;
 export type Deck = Card[];
@@ -102,6 +109,28 @@ export const hitParticipant = (
       dispatch(getValue(getState().player));
     };
   }
+};
+
+export const dealerHits = (): ThunkAction<void, RootState, unknown, Action> => {
+  return (dispatch, getState) => {
+    dispatch(flipCard());
+    let dealer17 = false;
+    //@ts-ignore
+    getState().hands.dealerHand.forEach(card => {
+      const val = card.value.slice(1);
+      if (val === 'A') {
+        dealer17 = true;
+      }
+    });
+    while (getState().score.dealerScore <= 17) {
+      // fix this
+      // if (getState().score.dealerScore === 17 && dealer17 === false) {
+      //   return dispatch(findWinner());
+      // }
+      dispatch(hitParticipant('dealer'));
+    }
+    dispatch(findWinner());
+  };
 };
 
 const initialState: Deck[] = [];

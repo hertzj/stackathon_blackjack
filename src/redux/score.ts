@@ -5,6 +5,7 @@ import {
   UPDATE_SPLIT_SCORE,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
+import { findWinner } from './result';
 
 export interface ScoreState {
   playerScore: number;
@@ -74,21 +75,26 @@ export const getValue = (playerName: string) => {
       A: 11,
     };
     const royalKeys = Object.keys(mapRoyalToVal) as Royals[];
-    const value = cards.reduce((acc: number, card: PlayerCard) => {
-      const cardVal = card.value.slice(1) as Royals; // a little worried about this as Royals
+    let aces = 0;
+    let value = cards.reduce((acc: number, card: PlayerCard) => {
+      const cardVal = card.value.slice(1) as Royals;
       let num: string | number = cardVal;
-      if (acc > 21 && royalKeys.indexOf(cardVal) === 4) {
-        num = '1';
-      } else if (royalKeys.indexOf(cardVal) === 4 && acc + 11 > 21) {
-        num = '1';
-      } else if (royalKeys.indexOf(cardVal) > -1) {
+      if (royalKeys.indexOf(cardVal) === 3) {
+        aces++;
+      }
+      if (royalKeys.indexOf(cardVal) > -1) {
         num = mapRoyalToVal[cardVal];
       }
       acc += Number(num);
       return acc;
     }, 0);
+    while (value > 21 && aces > 0) {
+      value -= 10;
+      aces--;
+    }
     if (value > 21) {
-      return dispatch(updateScore(playerName, value, true));
+      dispatch(updateScore(playerName, value, true));
+      return dispatch(findWinner());
     }
     dispatch(updateScore(playerName, value, false));
   };
