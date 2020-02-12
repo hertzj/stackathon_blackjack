@@ -90,9 +90,9 @@ class Hand extends Component<any, MyState> {
     const { playerHand } = hands;
     const { playerBust } = score;
     if (!playerHand.length) {
-      return <IonContent>loading...</IonContent>;
+      return <h1>loading...</h1>;
     } else if (playerBust) {
-      return <IonContent>{name} Busted!!!!</IonContent>;
+      return <h1>{name} Busted!!!!</h1>;
     }
     return (
       <IonGrid fixed>

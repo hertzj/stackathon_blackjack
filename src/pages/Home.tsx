@@ -29,11 +29,14 @@ const Home: React.FC = () => {
         <button onClick={() => dispatch(setPlayer(name))}>
           Set your name!
         </button>
-        <IonFab vertical="bottom" horizontal="center" slot="fixed">
-          <IonFabButton onClick={() => dispatch(initialDeal(name))}>
+        {/* <IonFab vertical="bottom" horizontal="center" slot="fixed">
+          <IonFabButton
+            onClick={() => dispatch(initialDeal(name))}
+            href="/tab2"
+          >
             Deal me!
           </IonFabButton>
-        </IonFab>
+        </IonFab> */}
       </IonContent>
     </IonPage>
   );

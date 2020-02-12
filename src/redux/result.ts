@@ -25,11 +25,15 @@ export const setResult = (name: string) => {
 export const findWinner = (): ThunkAction<void, RootState, unknown, Action> => {
   return (dispatch, getState) => {
     const playerBust = getState().score.playerBust;
+    const dealerBust = getState().score.dealerBust;
+    const playerName = getState().player;
     if (playerBust) {
       return dispatch(setResult('dealer'));
     }
+    if (dealerBust) {
+      return dispatch(setResult(playerName));
+    }
     const playerScore = getState().score.playerScore;
-    const playerName = getState().player;
     const dealerScore = getState().score.dealerScore;
     if (playerScore > dealerScore) {
       dispatch(setResult(playerName));

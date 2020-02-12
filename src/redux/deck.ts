@@ -123,10 +123,9 @@ export const dealerHits = (): ThunkAction<void, RootState, unknown, Action> => {
       }
     });
     while (getState().score.dealerScore <= 17) {
-      // fix this
-      // if (getState().score.dealerScore === 17 && dealer17 === false) {
-      //   return dispatch(findWinner());
-      // }
+      if (getState().score.dealerScore === 17 && dealer17 === false) {
+        return dispatch(findWinner());
+      }
       dispatch(hitParticipant('dealer'));
     }
     dispatch(findWinner());

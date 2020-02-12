@@ -48,9 +48,9 @@ class DealerHand extends Component<any, MyState> {
     const { dealerHand } = hands;
     const { dealerBust } = score;
     if (!dealerHand.length) {
-      return <IonContent>loading...</IonContent>;
+      return <h1>loading...</h1>;
     } else if (dealerBust) {
-      return <IonContent>Dealer Busted!!!!</IonContent>;
+      return <h1>Dealer Busted!!!!</h1>;
     }
     return (
       <IonGrid fixed>
