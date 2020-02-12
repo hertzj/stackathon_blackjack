@@ -15,7 +15,9 @@ import {
 import { connect } from 'react-redux';
 import { hitParticipant } from '../redux/deck';
 // @ts-ignore
-import Card from 'react-playing-card';
+// import Card from 'react-playing-card';
+import { ScoreState } from '../redux/score';
+import Card from '../CardTest/Card';
 
 interface PlayerCard {
   value: string;
@@ -38,115 +40,77 @@ class Hand extends Component<any, MyState> {
     };
   }
 
-  // ionViewWillEnter() {
-  //   const { hands } = this.props;
-  //   const { name } = this.props;
-
-  //   if (name === 'dealer') {
-  //     const { dealerHand } = hands;
-  //     this.setState({
-  //       cards: dealerHand,
-  //       name,
-  //     });
-  //   } else {
-  //     const { playerHand } = hands;
-  //     this.setState({
-  //       cards: playerHand,
-  //       name,
-  //     });
-  //   }
-  // }
-
-  // value = () => {
-  //   // should probably handle this in the redux store
-  //   const { cards } = this.state;
-  //   const mapRoyalToVal: { [key in Royals]: number } = {
-  //     J: 10,
-  //     Q: 10,
-  //     K: 10,
-  //     A: 11,
-  //   };
-  //   const royalKeys = Object.keys(mapRoyalToVal) as Royals[];
-  //   const value = cards.reduce((acc: number, card: PlayerCard) => {
-  //     const cardVal = card.value.slice(1) as Royals; // a little worried about this as Royals
-  //     let num: string | number = cardVal;
-  //     if (acc > 21 && royalKeys.indexOf(cardVal) === 4) {
-  //       num = '1';
-  //     } else if (royalKeys.indexOf(cardVal) === 4 && acc + 11 > 21) {
-  //       num = '1';
-  //     } else if (royalKeys.indexOf(cardVal) > -1) {
-  //       num = mapRoyalToVal[cardVal];
-  //     }
-  //     acc += Number(num);
-  //     return acc;
-  //   }, 0);
-  //   this.setState({ value });
+  // need check pair and split
+  // hit = () => {
+  //   const { player } = this.props;
+  //   this.props.hitParticipant(player);
   // };
 
-  // need check pair and split
-  hit = () => {
-    const { name } = this.state;
-    this.props.hitParticipant(name);
-  };
-
   render() {
-    const { hands } = this.props;
-    // will change this to be just a passed in prop later
-    const { name } = this.props;
-    if (!hands)
-      return (
-        <IonPage>
-          <IonContent>loading...</IonContent>
-        </IonPage>
-      );
-    else if (name === 'dealer') {
-      const { dealerHand } = hands;
-      const { cards } = dealerHand;
-      return (
-        <IonPage>
-          <IonContent>
-            <IonGrid>
-              <IonRow>
-                {cards.map((card: PlayerCard) => {
-                  const { value } = card;
-                  const suit = value.slice(0, 1);
-                  const cardVal = value.slice(1);
-                  return (
-                    <IonCol>
-                      <Card rank={cardVal} suit={suit} />
-                    </IonCol>
-                  );
-                })}
-              </IonRow>
-            </IonGrid>
-          </IonContent>
-        </IonPage>
-      );
-    } else {
-      // need to handle splitting
-      const { playerHand } = hands;
-      const { cards } = playerHand;
-      return (
-        <IonPage>
-          <IonContent>
-            <IonGrid>
-              <IonRow>
-                {cards.map((card: PlayerCard) => {
-                  const { value } = card;
-                  const suit = value.slice(0, 1);
-                  const cardVal = value.slice(1);
-                  return (
-                    <IonCol>
-                      <Card rank={cardVal} suit={suit} />
-                    </IonCol>
-                  );
-                })}
-              </IonRow>
-            </IonGrid>
-          </IonContent>
-        </IonPage>
-      );
+    const { name, hands, score } = this.props;
+    // console.log('hi: ', this.props);
+    // if (name === 'dealer') {
+    //   const { dealerHand } = hands;
+    //   const { dealerBust } = score;
+    //   if (!dealerHand.length) {
+    //     return (
+    //       <IonPage>
+    //         <IonContent>loading...</IonContent>
+    //       </IonPage>
+    //     );
+    //   } else if (dealerBust) {
+    //     return (
+    //       <IonPage>
+    //         <IonContent>Busted!!!!</IonContent>
+    //       </IonPage>
+    //     );
+    //   }
+    //   return (
+    //     <IonPage>
+    //       <IonContent>
+    //         <IonGrid fixed>
+    //           <IonRow>
+    //             {dealerHand.map((card: PlayerCard, idx: number) => {
+    //               const { value } = card;
+    //               const suit = value.slice(0, 1);
+    //               const cardVal = value.slice(1);
+    //               return (
+    //                 <IonCol sizeSm="2" key={idx}>
+    //                   <Card rank={cardVal} suit={suit} />
+    //                 </IonCol>
+    //               );
+    //             })}
+    //           </IonRow>
+    //         </IonGrid>
+    //       </IonContent>
+    //     </IonPage>
+    //   );
+    // } else {
+    // need to handle splitting
+    const { playerHand } = hands;
+    const { playerBust } = score;
+    if (!playerHand.length) {
+      return <h1>loading...</h1>;
+    } else if (playerBust) {
+      return <h1>{name} Busted!!!!</h1>;
     }
+    return (
+      <IonGrid fixed>
+        <IonRow>
+          {playerHand.map((card: PlayerCard, idx: number) => {
+            const { value } = card;
+            const suit = value.slice(0, 1);
+            const cardVal = value.slice(1);
+            return (
+              <IonCol sizeSm="2" key={idx}>
+                <Card rank={cardVal} suit={suit} />
+              </IonCol>
+            );
+          })}
+        </IonRow>
+      </IonGrid>
+    );
+    // }
   }
 }
 
@@ -155,9 +119,19 @@ class Hand extends Component<any, MyState> {
 //   dealerHand: PlayerCard[];
 //   playerSplitHand: PlayerCard[];
 // }
-const mapStateToProps = (state: any) => {
-  return state.hands;
-};
+// const mapStateToProps = (state: any) => {
+//   return state.hands;
+// };
+
+const mapStateToProps = ({
+  hands,
+  score,
+}: // player,
+{
+  hands: PlayerCard[];
+  score: ScoreState;
+  // player: string;
+}) => ({ hands, score });
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

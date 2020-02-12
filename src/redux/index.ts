@@ -2,12 +2,15 @@ import { combineReducers } from 'redux';
 import deckReducer from './deck';
 import handsReducer from './hands';
 import playerReducer from './player';
+import scoreReducer from './score';
+import resultReducer from './result';
 
 const appReducer = combineReducers({
   deck: deckReducer,
   hands: handsReducer,
   player: playerReducer,
-  // score: scoreReducer,
+  score: scoreReducer,
+  result: resultReducer,
   // tracker: trackerReducer,
 });
 

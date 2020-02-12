@@ -1,10 +1,17 @@
 import { INITIAL_DEAL, DEAL_CARD } from './constants';
-import { setPlayerHand, setDealerHand, hitDealer, hitPlayer } from './hands';
-import { shuffle, fullDeck } from '../utils';
-// import { getValue } from './score';
+import {
+  setPlayerHand,
+  setDealerHand,
+  hitDealer,
+  hitPlayer,
+  flipCard,
+} from './hands';
+import { shuffle, fullDeck, PlayerCard } from '../utils';
+import { getValue } from './score';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
+import { findWinner } from './result';
 
 export type Card = string;
 export type Deck = Card[];
@@ -66,36 +73,63 @@ export const initialDeal = (
     dispatch(setPlayerHand(playerCards));
     dispatch(setDealerHand(dealerCards));
     dispatch(initialDealActionCreator(shuffledDeck));
-    // dispatch(getValue('dealer'));
-    // dispatch(getValue(playerName));
+    dispatch(getValue('dealer'));
+    dispatch(getValue(playerName));
   };
 };
 
-export const hitParticipant = (participant: string) => {
+export const hitParticipant = (
+  participant: string
+): ThunkAction<void, RootState, unknown, Action> => {
   if (participant === 'dealer') {
-    return (dispatch: any, getState: any) => {
-      const deck = getState().deck;
-      const card = deck.pop();
-      const newCard = {
+    return (dispatch, getState) => {
+      const deck: Deck = getState().deck;
+      //@ts-ignore
+      const card: Card = deck.pop();
+      const newCard: PlayerCard = {
         value: card,
         faceUp: true,
       };
       dispatch(hitDealer(newCard));
       dispatch(dealCardActionCreator(deck));
+      dispatch(getValue('dealer'));
     };
   } else {
     // need to deal with splitting
-    return (dispatch: any, getState: any) => {
-      const deck = getState().deck;
-      const card = deck.pop();
-      const newCard = {
+    return (dispatch, getState) => {
+      const deck: Deck = getState().deck;
+      // @ts-ignore
+      const card: Card = deck.pop();
+      const newCard: PlayerCard = {
         value: card,
         faceUp: true,
       };
       dispatch(hitPlayer(newCard));
       dispatch(dealCardActionCreator(deck));
+      dispatch(getValue(getState().player));
     };
   }
+};
+
+export const dealerHits = (): ThunkAction<void, RootState, unknown, Action> => {
+  return (dispatch, getState) => {
+    dispatch(flipCard());
+    let dealer17 = false;
+    //@ts-ignore
+    getState().hands.dealerHand.forEach(card => {
+      const val = card.value.slice(1);
+      if (val === 'A') {
+        dealer17 = true;
+      }
+    });
+    while (getState().score.dealerScore <= 17) {
+      if (getState().score.dealerScore === 17 && dealer17 === false) {
+        return dispatch(findWinner());
+      }
+      dispatch(hitParticipant('dealer'));
+    }
+    dispatch(findWinner());
+  };
 };
 
 const initialState: Deck[] = [];
@@ -107,7 +141,7 @@ const deckReducer = (state = initialState, action: DeckAction) => {
     case DEAL_CARD:
       return action.cards;
     default:
-      return initialState;
+      return state;
   }
 };
 

@@ -4,6 +4,9 @@ import {
   HIT_PLAYER,
   HIT_DEALER,
 } from './constants';
+import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { RootState } from './index';
 
 interface HandsAction {
   type: symbol;
@@ -12,7 +15,7 @@ interface HandsAction {
   card?: PlayerCard;
 }
 
-interface PlayerCard {
+export interface PlayerCard {
   value: string;
   faceUp: boolean;
 }
@@ -42,6 +45,18 @@ export const hitDealer = (card: PlayerCard): HandsAction => {
   return {
     type: HIT_DEALER,
     card,
+  };
+};
+
+export const flipCard = (): ThunkAction<void, RootState, unknown, Action> => {
+  return (dispatch, getState) => {
+    // @ts-ignore
+    const dealerCards = getState().hands.dealerHand;
+    dealerCards.forEach((card: PlayerCard) => {
+      let { faceUp } = card;
+      if (!faceUp) card.faceUp = true;
+    });
+    dispatch(setDealerHand(dealerCards));
   };
 };
 
@@ -78,7 +93,7 @@ const handsReducer = (state = initialState, action: HandsAction) => {
       };
     }
     default:
-      return initialState;
+      return state;
   }
 };
 

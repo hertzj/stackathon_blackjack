@@ -1,33 +1,53 @@
 import {
   RESET_SCORE,
-  HIT_PLAYER,
-  HIT_DEALER,
-  HIT_SPLIT_PLAYER,
+  UPDATE_DEALER_SCORE,
+  UPDATE_PLAYER_SCORE,
+  UPDATE_SPLIT_SCORE,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
+import { findWinner } from './result';
 
-const initialState = {
+export interface ScoreState {
+  playerScore: number;
+  dealerScore: number;
+  playerSplitScore: number;
+  playerBust: boolean;
+  dealerBust: boolean;
+  playerSplitBust: boolean;
+}
+
+const initialState: ScoreState = {
   playerScore: 0,
   dealerScore: 0,
   playerSplitScore: 0,
+  playerBust: false,
+  dealerBust: false,
+  playerSplitBust: false,
 };
 
 // action creator
-export const updateScore = (playerName: string, score: number) => {
+export const updateScore = (
+  playerName: string,
+  score: number,
+  busted: boolean
+) => {
   if (playerName === 'dealer') {
     return {
-      type: HIT_DEALER,
+      type: UPDATE_DEALER_SCORE,
       score,
+      busted,
     };
   } else if (playerName === 'split') {
     return {
-      type: HIT_SPLIT_PLAYER,
+      type: UPDATE_SPLIT_SCORE,
       score,
+      busted,
     };
   } else {
     return {
-      type: HIT_PLAYER,
+      type: UPDATE_PLAYER_SCORE,
       score,
+      busted,
     };
   }
 };
@@ -55,20 +75,28 @@ export const getValue = (playerName: string) => {
       A: 11,
     };
     const royalKeys = Object.keys(mapRoyalToVal) as Royals[];
-    const value = cards.reduce((acc: number, card: PlayerCard) => {
-      const cardVal = card.value.slice(1) as Royals; // a little worried about this as Royals
+    let aces = 0;
+    let value = cards.reduce((acc: number, card: PlayerCard) => {
+      const cardVal = card.value.slice(1) as Royals;
       let num: string | number = cardVal;
-      if (acc > 21 && royalKeys.indexOf(cardVal) === 4) {
-        num = '1';
-      } else if (royalKeys.indexOf(cardVal) === 4 && acc + 11 > 21) {
-        num = '1';
-      } else if (royalKeys.indexOf(cardVal) > -1) {
+      if (royalKeys.indexOf(cardVal) === 3) {
+        aces++;
+      }
+      if (royalKeys.indexOf(cardVal) > -1) {
         num = mapRoyalToVal[cardVal];
       }
       acc += Number(num);
       return acc;
     }, 0);
-    dispatch(updateScore(playerName, value));
+    while (value > 21 && aces > 0) {
+      value -= 10;
+      aces--;
+    }
+    if (value > 21) {
+      dispatch(updateScore(playerName, value, true));
+      return dispatch(findWinner());
+    }
+    dispatch(updateScore(playerName, value, false));
   };
 };
 
@@ -76,25 +104,28 @@ const scoreReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case RESET_SCORE:
       return initialState;
-    case HIT_PLAYER: {
+    case UPDATE_PLAYER_SCORE: {
       return {
         ...state,
         playerScore: action.score,
+        playerBust: action.busted,
       };
     }
-    case HIT_SPLIT_PLAYER: {
+    case UPDATE_SPLIT_SCORE: {
       return {
         ...state,
         playerSplitScore: action.score,
+        playerSplitBust: action.busted,
       };
     }
-    case HIT_DEALER:
+    case UPDATE_DEALER_SCORE:
       return {
         ...state,
         dealerScore: action.score,
+        dealerBust: action.busted,
       };
     default:
-      return initialState;
+      return state;
   }
 };
 
