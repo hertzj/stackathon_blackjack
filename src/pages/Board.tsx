@@ -24,7 +24,7 @@ const Board: React.FC = () => {
   const [dealStatus, setDeal] = useState(false);
   const [doubleDownStatus, setDouble] = useState(false);
   //@ts-ignore
-  const name = useSelector(state => state.player);
+  const name: string = useSelector(state => state.player);
   // @ts-ignore
   const result = useSelector(state => state.result);
   const dispatch = useDispatch();
@@ -65,7 +65,10 @@ const Board: React.FC = () => {
       </IonHeader>
       <IonContent>
         <DealerHand />
-        <Hand name={name} />
+        <Hand
+          // @ts-ignore
+          name={name}
+        />
         {result ? (
           <>
             <h3>{result} won!!</h3>
