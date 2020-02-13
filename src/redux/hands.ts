@@ -7,6 +7,7 @@ import {
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
+import { doubleDownAction, getValue } from './score';
 
 interface HandsAction {
   type: symbol;
@@ -57,6 +58,30 @@ export const flipCard = (): ThunkAction<void, RootState, unknown, Action> => {
       if (!faceUp) card.faceUp = true;
     });
     dispatch(setDealerHand(dealerCards));
+  };
+};
+
+export const flipPlayerCard = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  Action
+> => {
+  return (dispatch, getState) => {
+    // @ts-ignore
+    const playerCards = getState().hands.playerHand;
+    let flipped = false;
+    playerCards.forEach((card: PlayerCard) => {
+      let { faceUp } = card;
+      if (!faceUp) {
+        card.faceUp = true;
+        flipped = true;
+      }
+    });
+    if (!flipped) return null;
+    dispatch(setPlayerHand(playerCards));
+    dispatch(doubleDownAction(false));
+    dispatch(getValue(getState().player));
   };
 };
 

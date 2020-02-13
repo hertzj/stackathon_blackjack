@@ -2,6 +2,7 @@ import { SET_WINNER } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
+import { flipPlayerCard } from './hands';
 
 interface ResultAction {
   type: symbol;
@@ -24,9 +25,10 @@ export const setResult = (name: string) => {
 
 export const findWinner = (): ThunkAction<void, RootState, unknown, Action> => {
   return (dispatch, getState) => {
+    dispatch(flipPlayerCard());
+    const playerName = getState().player;
     const playerBust = getState().score.playerBust;
     const dealerBust = getState().score.dealerBust;
-    const playerName = getState().player;
     if (playerBust) {
       return dispatch(setResult('dealer'));
     }

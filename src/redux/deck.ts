@@ -7,11 +7,12 @@ import {
   flipCard,
 } from './hands';
 import { shuffle, fullDeck, PlayerCard } from '../utils';
-import { getValue } from './score';
+import { getValue, doubleDownAction } from './score';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
-import { findWinner } from './result';
+import { findWinner, setResult } from './result';
+import { trackOptimalPlay } from './tracker';
 
 export type Card = string;
 export type Deck = Card[];
@@ -42,7 +43,7 @@ export const dealCardActionCreator = (cards: Deck): DeckAction => {
 export const initialDeal = (
   playerName: string
 ): ThunkAction<void, RootState, unknown, Action> => {
-  return dispatch => {
+  return (dispatch, getState) => {
     const shuffledDeck = shuffle(fullDeck);
     const playerCards = [];
     const dealerCards = [];
@@ -75,6 +76,31 @@ export const initialDeal = (
     dispatch(initialDealActionCreator(shuffledDeck));
     dispatch(getValue('dealer'));
     dispatch(getValue(playerName));
+    dispatch(trackOptimalPlay());
+    if (getState().score.playerScore === 21) {
+      return dispatch(setResult(playerName));
+    }
+  };
+};
+
+export const doubleDownThunk = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  Action
+> => {
+  return (dispatch, getState) => {
+    const deck: Deck = getState().deck;
+    //@ts-ignore
+    const card: Card = deck.pop();
+    const newCard: PlayerCard = {
+      value: card,
+      faceUp: false,
+    };
+    dispatch(doubleDownAction(true));
+    dispatch(hitPlayer(newCard));
+    dispatch(dealCardActionCreator(deck));
+    dispatch(getValue(getState().player));
   };
 };
 
@@ -90,6 +116,7 @@ export const hitParticipant = (
         value: card,
         faceUp: true,
       };
+
       dispatch(hitDealer(newCard));
       dispatch(dealCardActionCreator(deck));
       dispatch(getValue('dealer'));
@@ -107,6 +134,7 @@ export const hitParticipant = (
       dispatch(hitPlayer(newCard));
       dispatch(dealCardActionCreator(deck));
       dispatch(getValue(getState().player));
+      dispatch(trackOptimalPlay());
     };
   }
 };
@@ -132,6 +160,7 @@ export const dealerHits = (): ThunkAction<void, RootState, unknown, Action> => {
   };
 };
 
+// should this type just be Deck?
 const initialState: Deck[] = [];
 
 const deckReducer = (state = initialState, action: DeckAction) => {

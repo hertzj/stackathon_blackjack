@@ -11,32 +11,45 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Hand from './Hand';
 import DealerHand from './DealerHand';
-import { hitParticipant, dealerHits, initialDeal } from '../redux/deck';
+import {
+  hitParticipant,
+  dealerHits,
+  initialDeal,
+  doubleDownThunk,
+} from '../redux/deck';
+import { resetStore } from '../store';
 
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
   const [dealStatus, setDeal] = useState(false);
+  const [doubleDownStatus, setDouble] = useState(false);
   //@ts-ignore
-  const name = useSelector(state => state.player);
+  const name: string = useSelector(state => state.player);
   // @ts-ignore
   const result = useSelector(state => state.result);
   const dispatch = useDispatch();
 
   const startGame = () => {
     setDeal(true);
+    setDouble(true);
     dispatch(initialDeal(name));
   };
   const stay = () => {
     setStay(true);
     dispatch(dealerHits());
   };
-  // if (result) {
-  //   return (
-  //     <IonPage>
-  //       <IonContent>{result} won!!!!</IonContent>
-  //     </IonPage>
-  //   );
-  // }
+
+  const hit = () => {
+    dispatch(hitParticipant(name));
+    setDouble(false);
+  };
+
+  const doubleDown = () => {
+    dispatch(doubleDownThunk());
+    setDouble(false);
+    stay();
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -46,8 +59,22 @@ const Board: React.FC = () => {
       </IonHeader>
       <IonContent>
         <DealerHand />
-        <Hand name={name} />
-        {result ? <h3>{result} won!!</h3> : ''}
+        <Hand
+          // @ts-ignore
+          name={name}
+        />
+        {result ? (
+          <>
+            <h3>{result} won!!</h3>
+            <IonFab vertical="bottom" horizontal="center" slot="fixed">
+              <IonFabButton onClick={() => dispatch(resetStore())}>
+                Start Over (DUH CHANGE THIS)!
+              </IonFabButton>
+            </IonFab>
+          </>
+        ) : (
+          ''
+        )}
         {dealStatus ? (
           ''
         ) : (
@@ -58,9 +85,14 @@ const Board: React.FC = () => {
         <IonFab vertical="bottom" horizontal="start" slot="fixed">
           {stayStatus === false && dealStatus ? (
             <>
-              <IonFabButton onClick={() => dispatch(hitParticipant(name))}>
-                Hit me!
-              </IonFabButton>
+              {doubleDownStatus ? (
+                <IonFabButton onClick={() => doubleDown()}>
+                  Double Down
+                </IonFabButton>
+              ) : (
+                ''
+              )}
+              <IonFabButton onClick={() => hit()}>Hit me!</IonFabButton>
               <IonFabButton onClick={() => stay()}>Stay</IonFabButton>
             </>
           ) : (

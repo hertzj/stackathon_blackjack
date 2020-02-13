@@ -3,6 +3,7 @@ import {
   UPDATE_DEALER_SCORE,
   UPDATE_PLAYER_SCORE,
   UPDATE_SPLIT_SCORE,
+  DOUBLE_DOWN,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
 import { findWinner } from './result';
@@ -14,6 +15,7 @@ export interface ScoreState {
   playerBust: boolean;
   dealerBust: boolean;
   playerSplitBust: boolean;
+  flippedCard: boolean;
 }
 
 const initialState: ScoreState = {
@@ -23,6 +25,7 @@ const initialState: ScoreState = {
   playerBust: false,
   dealerBust: false,
   playerSplitBust: false,
+  flippedCard: false,
 };
 
 // action creator
@@ -52,6 +55,13 @@ export const updateScore = (
   }
 };
 
+export const doubleDownAction = (flippedCard: boolean) => {
+  return {
+    type: DOUBLE_DOWN,
+    flippedCard,
+  };
+};
+
 // thunk
 
 export const getValue = (playerName: string) => {
@@ -68,6 +78,7 @@ export const getValue = (playerName: string) => {
   }
   return (dispatch: any, getState: any) => {
     const cards = getState().hands[hand];
+    const flippedCard = getState().score.flippedCard;
     const mapRoyalToVal: { [key in Royals]: number } = {
       J: 10,
       Q: 10,
@@ -92,7 +103,11 @@ export const getValue = (playerName: string) => {
       value -= 10;
       aces--;
     }
-    if (value > 21) {
+    if (value > 21 && flippedCard === false) {
+      dispatch(updateScore(playerName, value, true));
+      return dispatch(findWinner());
+    }
+    if (value > 21 && playerName === 'dealer') {
       dispatch(updateScore(playerName, value, true));
       return dispatch(findWinner());
     }
@@ -123,6 +138,11 @@ const scoreReducer = (state = initialState, action: any) => {
         ...state,
         dealerScore: action.score,
         dealerBust: action.busted,
+      };
+    case DOUBLE_DOWN:
+      return {
+        ...state,
+        flippedCard: action.flippedCard,
       };
     default:
       return state;
