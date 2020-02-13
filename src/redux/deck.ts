@@ -159,6 +159,7 @@ export const dealerHits = (): ThunkAction<void, RootState, unknown, Action> => {
   };
 };
 
+// should this type just be Deck?
 const initialState: Deck[] = [];
 
 const deckReducer = (state = initialState, action: DeckAction) => {

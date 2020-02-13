@@ -2,6 +2,7 @@ import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { PlayerCard } from '../utils';
+import { NEW_TRACK } from './constants';
 
 interface Chart {
   2: string[];
@@ -319,3 +320,49 @@ export const trackOptimalPlay = (): ThunkAction<
 // 10 7
 // 9 8
 // 9< 9
+
+// I'd like to track what should have happened and what situations were
+// so for each turn something like
+// so I want an array of those
+const turnObjExample = {
+  play: 'hit',
+  yourHand: '17+' || 'A, 7',
+  dealerUpCard: '5',
+};
+
+interface TrackerObject {
+  play: string;
+  yourHand: string;
+  dealerUpCard: string;
+}
+
+const initialState: TrackerObject[] = [];
+
+// action creator
+interface TrackerAction {
+  type: symbol;
+  tracker: TrackerObject;
+}
+
+const newPlayToTrack = (tracker: TrackerObject) => {
+  return {
+    type: NEW_TRACK,
+    tracker,
+  };
+};
+
+// THURSDAY AFTERNOON:
+// MAKE THUNK GET THE RIGHT DATA AND SEND IT TO THE ACTION CREATOR
+// THEN FIND A PLACE TO STORE THE DATA FROM THE STORE
+// LIKE A THIRD TAB
+
+const trackerReducer = (state = initialState, action: TrackerAction) => {
+  switch (action.type) {
+    case NEW_TRACK:
+      return [...state, action.tracker];
+    default:
+      return state;
+  }
+};
+
+export default trackerReducer;
