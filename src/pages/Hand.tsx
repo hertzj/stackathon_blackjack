@@ -98,7 +98,14 @@ class Hand extends Component<any, MyState> {
       <IonGrid fixed>
         <IonRow>
           {playerHand.map((card: PlayerCard, idx: number) => {
-            const { value } = card;
+            const { value, faceUp } = card;
+            if (faceUp === false) {
+              return (
+                <IonCol sizeSm="2" key={idx}>
+                  <Card rank={null} suit={null} />
+                </IonCol>
+              );
+            }
             const suit = value.slice(0, 1);
             const cardVal = value.slice(1);
             return (
