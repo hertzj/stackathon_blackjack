@@ -262,7 +262,12 @@ export const trackOptimalPlay = (): ThunkAction<
       // @ts-ignore
       const optimalPlay = optimalPlayChart[dealerCardVal][chartIndexToCheck];
       // change to an actual thing
-      console.log(optimalPlay);
+      const tracker = {
+        play: optimalPlay,
+        yourHand: `A, ${playerCardValues[otherIndex]}`,
+        dealerUpCard: dealerCardVal,
+      };
+      dispatch(newPlayToTrack(tracker));
     } else {
       let playerHandVal: number = getState().score.playerScore;
       let playerHandValString: string;
@@ -287,7 +292,12 @@ export const trackOptimalPlay = (): ThunkAction<
       const chartIndexToCheck = mapCardToIndex[playerHandValString];
       //@ts-ignore
       const optimalPlay = optimalPlayChart[dealerCardVal][chartIndexToCheck];
-      console.log(optimalPlay);
+      const tracker = {
+        play: optimalPlay,
+        yourHand: playerHandValString,
+        dealerUpCard: dealerCardVal,
+      };
+      dispatch(newPlayToTrack(tracker));
     }
   };
 };
@@ -330,7 +340,7 @@ const turnObjExample = {
   dealerUpCard: '5',
 };
 
-interface TrackerObject {
+export interface TrackerObject {
   play: string;
   yourHand: string;
   dealerUpCard: string;

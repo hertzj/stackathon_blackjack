@@ -134,6 +134,7 @@ export const hitParticipant = (
       dispatch(hitPlayer(newCard));
       dispatch(dealCardActionCreator(deck));
       dispatch(getValue(getState().player));
+      dispatch(trackOptimalPlay());
     };
   }
 };

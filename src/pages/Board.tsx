@@ -50,12 +50,6 @@ const Board: React.FC = () => {
     stay();
   };
 
-  // doubnle down plan
-  // have doubledown button that only shows after initial deal
-  // write double down thunk and dispatch that from doubledown button
-  // for some reason, this can cause an infinite loop now
-  // is is in the get value thunk
-
   return (
     <IonPage>
       <IonHeader>

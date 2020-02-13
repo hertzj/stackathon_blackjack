@@ -6,7 +6,7 @@ import {
   DOUBLE_DOWN,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
-import { findWinner, setResult } from './result';
+import { findWinner } from './result';
 
 export interface ScoreState {
   playerScore: number;
@@ -65,7 +65,6 @@ export const doubleDownAction = (flippedCard: boolean) => {
 // thunk
 
 export const getValue = (playerName: string) => {
-  console.log('getvalue thunk');
   let hand: string;
   switch (playerName) {
     case 'dealer':
@@ -78,7 +77,6 @@ export const getValue = (playerName: string) => {
       hand = 'playerHand';
   }
   return (dispatch: any, getState: any) => {
-    console.log('inside getvalue dispatcher');
     const cards = getState().hands[hand];
     const flippedCard = getState().score.flippedCard;
     const mapRoyalToVal: { [key in Royals]: number } = {

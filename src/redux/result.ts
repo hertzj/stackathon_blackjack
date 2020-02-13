@@ -2,9 +2,7 @@ import { SET_WINNER } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
-import { PlayerCard } from '../utils';
-import { setPlayerHand, flipPlayerCard } from './hands';
-import { doubleDownAction, getValue } from './score';
+import { flipPlayerCard } from './hands';
 
 interface ResultAction {
   type: symbol;

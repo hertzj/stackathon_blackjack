@@ -4,6 +4,7 @@ import handsReducer from './hands';
 import playerReducer from './player';
 import scoreReducer from './score';
 import resultReducer from './result';
+import trackerReducer from './tracker';
 
 const appReducer = combineReducers({
   deck: deckReducer,
@@ -11,7 +12,7 @@ const appReducer = combineReducers({
   player: playerReducer,
   score: scoreReducer,
   result: resultReducer,
-  // tracker: trackerReducer,
+  tracker: trackerReducer,
 });
 
 export default appReducer;
