@@ -5,6 +5,7 @@ import {
   HIT_DEALER,
   OFFER_SPLIT,
   SPLIT,
+  SPLIT_HAND,
 } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -136,6 +137,8 @@ export const splitThunk = (): ThunkAction<void, RootState, unknown, Action> => {
     }
 
     dispatch(splitHand(playerHand, playerSplitHand));
+    dispatch(getValue('player')); // think this will return the default case
+    dispatch(getValue(SPLIT_HAND));
   };
 };
 
@@ -185,7 +188,7 @@ const handsReducer = (state = initialState, action: HandsAction) => {
         offerSplit: action.offerSplit,
         split: action.split,
         playerHand: action.playerHand,
-        playerSplitHand: action.playerHand,
+        playerSplitHand: action.playerSplitHand,
       };
     }
     default:

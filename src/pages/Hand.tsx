@@ -19,6 +19,7 @@ import { hitParticipant } from '../redux/deck';
 import { ScoreState } from '../redux/score';
 import Card from '../CardTest/Card';
 import { useDispatch, useSelector } from 'react-redux';
+import { SPLIT_HAND } from '../redux/constants';
 
 interface PlayerCard {
   value: string;
@@ -34,37 +35,75 @@ interface MyState {
 const Hand: React.FC = props => {
   // @ts-ignore
   const name: string = props.name;
+
   // @ts-ignore
   const playerHand = useSelector(state => state.hands.playerHand);
   // @ts-ignore
   const playerBust = useSelector(state => state.score.playerBust);
+
+  // @ts-ignore
+  const splitCards = useSelector(state => state.hands.playerSplitHand);
+  //@ts-ignore
+  const splitBust = useSelector(state => state.score.playerSplitBust);
+
+  const split: boolean = name === SPLIT_HAND ? true : false;
+
+  const normalHand = () => {
+    return (
+      <IonRow>
+        {playerHand.map((card: PlayerCard, idx: number) => {
+          const { value, faceUp } = card;
+          if (faceUp === false) {
+            return (
+              <IonCol sizeSm="2" key={idx}>
+                <Card rank={null} suit={null} />
+              </IonCol>
+            );
+          }
+          const suit = value.slice(0, 1);
+          const cardVal = value.slice(1);
+          return (
+            <IonCol sizeSm="2" key={idx}>
+              <Card rank={cardVal} suit={suit} />
+            </IonCol>
+          );
+        })}
+      </IonRow>
+    );
+  };
+
+  const splitHand = () => {
+    return (
+      <IonRow>
+        {splitCards.map((card: PlayerCard, idx: number) => {
+          const { value, faceUp } = card;
+          if (faceUp === false) {
+            return (
+              <IonCol sizeSm="2" key={idx}>
+                <Card rank={null} suit={null} />
+              </IonCol>
+            );
+          }
+          const suit = value.slice(0, 1);
+          const cardVal = value.slice(1);
+          return (
+            <IonCol sizeSm="2" key={idx}>
+              <Card rank={cardVal} suit={suit} />
+            </IonCol>
+          );
+        })}
+      </IonRow>
+    );
+  };
+
   if (!playerHand.length) {
     return <h1>loading...</h1>;
   }
   return (
     <>
-      {playerBust ? <h1>{name} busted</h1> : null}
-      <IonGrid fixed>
-        <IonRow>
-          {playerHand.map((card: PlayerCard, idx: number) => {
-            const { value, faceUp } = card;
-            if (faceUp === false) {
-              return (
-                <IonCol sizeSm="2" key={idx}>
-                  <Card rank={null} suit={null} />
-                </IonCol>
-              );
-            }
-            const suit = value.slice(0, 1);
-            const cardVal = value.slice(1);
-            return (
-              <IonCol sizeSm="2" key={idx}>
-                <Card rank={cardVal} suit={suit} />
-              </IonCol>
-            );
-          })}
-        </IonRow>
-      </IonGrid>
+      {playerBust && split === false ? <h1>{name} busted</h1> : null}
+      {splitBust && split === true ? <h1>split hand busted</h1> : null}
+      <IonGrid fixed>{split ? splitHand() : normalHand()}</IonGrid>
     </>
   );
 };

@@ -19,6 +19,7 @@ import {
 } from '../redux/deck';
 import { resetStore } from '../store';
 import { splitThunk } from '../redux/hands';
+import { SPLIT_HAND } from '../redux/constants';
 
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
@@ -30,6 +31,8 @@ const Board: React.FC = () => {
   const result = useSelector(state => state.result);
   // @ts-ignore
   const offerSplit = useSelector(state => state.hands.offerSplit);
+  // @ts-ignore
+  const isSplit = useSelector(state => state.hands.split);
   const dispatch = useDispatch();
 
   const startGame = () => {
@@ -66,6 +69,12 @@ const Board: React.FC = () => {
           // @ts-ignore
           name={name}
         />
+        {isSplit ? (
+          <Hand
+            //@ts-ignore
+            name={SPLIT_HAND}
+          />
+        ) : null}
         {result ? (
           <>
             <h3>{result} won!!</h3>

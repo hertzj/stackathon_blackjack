@@ -4,6 +4,7 @@ import {
   UPDATE_PLAYER_SCORE,
   UPDATE_SPLIT_SCORE,
   DOUBLE_DOWN,
+  SPLIT_HAND,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
 import { findWinner } from './result';
@@ -70,7 +71,7 @@ export const getValue = (playerName: string) => {
     case 'dealer':
       hand = 'dealerHand';
       break;
-    case 'split':
+    case SPLIT_HAND:
       hand = 'playerSplitHand';
       break;
     default:

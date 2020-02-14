@@ -72,10 +72,22 @@ export const initialDeal = (
         dealerCards.push(handCard);
       }
     }
+    // for SPLIT CHECK
+    playerCards.pop();
+    playerCards.pop();
+    playerCards.push({
+      value: 'HA',
+      faceUp: true,
+    });
+    playerCards.push({
+      value: 'CA',
+      faceUp: true,
+    });
     if (checkPair(playerCards)) {
       // should maybe be last thing
       dispatch(offerSplit());
     }
+    // END SPLIT CHECK
     dispatch(setPlayerHand(playerCards));
     dispatch(setDealerHand(dealerCards));
     dispatch(initialDealActionCreator(shuffledDeck));
