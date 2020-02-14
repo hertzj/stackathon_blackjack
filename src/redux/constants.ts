@@ -14,3 +14,5 @@ export const UPDATE_SPLIT_SCORE = Symbol('split_score_update');
 export const SET_WINNER = Symbol('set_winner');
 export const DOUBLE_DOWN = Symbol('DOUBLE_DOWN');
 export const NEW_TRACK = Symbol('NEW_TRACK');
+export const OFFER_SPLIT = Symbol('OFFER_SPLIT');
+export const SPLIT = Symbol('SPLIT');

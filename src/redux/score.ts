@@ -103,6 +103,8 @@ export const getValue = (playerName: string) => {
       value -= 10;
       aces--;
     }
+    // need to complicate this for busting when split
+    // possible create something where if you split I return you out to another function
     if (value > 21 && flippedCard === false) {
       dispatch(updateScore(playerName, value, true));
       return dispatch(findWinner());

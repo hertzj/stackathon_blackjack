@@ -5,8 +5,9 @@ import {
   hitDealer,
   hitPlayer,
   flipCard,
+  offerSplit,
 } from './hands';
-import { shuffle, fullDeck, PlayerCard } from '../utils';
+import { shuffle, fullDeck, PlayerCard, checkPair } from '../utils';
 import { getValue, doubleDownAction } from './score';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -71,6 +72,10 @@ export const initialDeal = (
         dealerCards.push(handCard);
       }
     }
+    if (checkPair(playerCards)) {
+      // should maybe be last thing
+      dispatch(offerSplit());
+    }
     dispatch(setPlayerHand(playerCards));
     dispatch(setDealerHand(dealerCards));
     dispatch(initialDealActionCreator(shuffledDeck));
@@ -133,6 +138,7 @@ export const hitParticipant = (
       };
       dispatch(hitPlayer(newCard));
       dispatch(dealCardActionCreator(deck));
+      // check if split is true, if so also get value for split (check get value switch)
       dispatch(getValue(getState().player));
       dispatch(trackOptimalPlay());
     };

@@ -18,6 +18,7 @@ import {
   doubleDownThunk,
 } from '../redux/deck';
 import { resetStore } from '../store';
+import { splitThunk } from '../redux/hands';
 
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
@@ -27,6 +28,8 @@ const Board: React.FC = () => {
   const name: string = useSelector(state => state.player);
   // @ts-ignore
   const result = useSelector(state => state.result);
+  // @ts-ignore
+  const offerSplit = useSelector(state => state.hands.offerSplit);
   const dispatch = useDispatch();
 
   const startGame = () => {
@@ -88,6 +91,13 @@ const Board: React.FC = () => {
               {doubleDownStatus ? (
                 <IonFabButton onClick={() => doubleDown()}>
                   Double Down
+                </IonFabButton>
+              ) : (
+                ''
+              )}
+              {offerSplit ? (
+                <IonFabButton onClick={() => dispatch(splitThunk())}>
+                  Split!
                 </IonFabButton>
               ) : (
                 ''
