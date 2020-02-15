@@ -11,6 +11,7 @@ import {
   IonCol,
   IonFab,
   IonFabButton,
+  IonItem,
 } from '@ionic/react';
 import { connect } from 'react-redux';
 import { hitParticipant } from '../redux/deck';
@@ -55,17 +56,21 @@ const Hand: React.FC = props => {
           const { value, faceUp } = card;
           if (faceUp === false) {
             return (
-              <IonCol sizeSm="2" key={idx}>
-                <Card rank={null} suit={null} />
-              </IonCol>
+              <IonItem key={idx} color="primary">
+                <IonCol color="primary" sizeSm="2" key={idx}>
+                  <Card rank={null} suit={null} />
+                </IonCol>
+              </IonItem>
             );
           }
           const suit = value.slice(0, 1);
           const cardVal = value.slice(1);
           return (
-            <IonCol sizeSm="2" key={idx}>
-              <Card rank={cardVal} suit={suit} />
-            </IonCol>
+            <IonItem key={idx} color="primary">
+              <IonCol color="primary" sizeSm="2" key={idx}>
+                <Card rank={cardVal} suit={suit} />
+              </IonCol>
+            </IonItem>
           );
         })}
       </IonRow>
@@ -79,17 +84,21 @@ const Hand: React.FC = props => {
           const { value, faceUp } = card;
           if (faceUp === false) {
             return (
-              <IonCol sizeSm="2" key={idx}>
-                <Card rank={null} suit={null} />
-              </IonCol>
+              <IonItem color="primary" key={idx}>
+                <IonCol sizeSm="2" key={idx}>
+                  <Card rank={null} suit={null} />
+                </IonCol>
+              </IonItem>
             );
           }
           const suit = value.slice(0, 1);
           const cardVal = value.slice(1);
           return (
-            <IonCol sizeSm="2" key={idx}>
-              <Card rank={cardVal} suit={suit} />
-            </IonCol>
+            <IonItem color="primary" key={idx}>
+              <IonCol sizeSm="2" key={idx}>
+                <Card rank={cardVal} suit={suit} />
+              </IonCol>
+            </IonItem>
           );
         })}
       </IonRow>

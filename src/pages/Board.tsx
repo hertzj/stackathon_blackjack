@@ -119,7 +119,9 @@ const Board: React.FC = () => {
             ''
           ) : (
             <IonFab vertical="bottom" horizontal="center" slot="fixed">
-              <IonFabButton onClick={() => startGame()}>Deal me!</IonFabButton>
+              <IonFabButton color="medium" onClick={() => startGame()}>
+                Deal me!
+              </IonFabButton>
             </IonFab>
           )}
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
@@ -129,19 +131,25 @@ const Board: React.FC = () => {
             !playerBust ? (
               <>
                 {doubleDownStatus ? (
-                  <IonFabButton onClick={() => doubleDown()}>
+                  <IonFabButton color="medium" onClick={() => doubleDown()}>
                     Double Down
                   </IonFabButton>
                 ) : (
                   ''
                 )}
                 {offerSplit ? (
-                  <IonFabButton onClick={() => split()}>Split!</IonFabButton>
+                  <IonFabButton color="medium" onClick={() => split()}>
+                    Split!
+                  </IonFabButton>
                 ) : (
                   ''
                 )}
-                <IonFabButton onClick={() => hit()}>Hit me!</IonFabButton>
-                <IonFabButton onClick={() => stay()}>Stay</IonFabButton>
+                <IonFabButton color="medium" onClick={() => hit()}>
+                  Hit me!
+                </IonFabButton>
+                <IonFabButton color="medium" onClick={() => stay()}>
+                  Stay
+                </IonFabButton>
               </>
             ) : (
               ''
@@ -149,12 +157,16 @@ const Board: React.FC = () => {
             {isSplit && splitDealStatus && !splitStayStatus && !splitBust ? (
               <>
                 {splitDoubleDownStatus ? (
-                  <IonFabButton onClick={() => doubleDown()}>
+                  <IonFabButton color="medium" onClick={() => doubleDown()}>
                     split double down
                   </IonFabButton>
                 ) : null}
-                <IonFabButton onClick={() => hit()}>split hit</IonFabButton>
-                <IonFabButton onClick={() => stay()}>split stay</IonFabButton>
+                <IonFabButton color="medium" onClick={() => hit()}>
+                  split hit
+                </IonFabButton>
+                <IonFabButton color="medium" onClick={() => stay()}>
+                  split stay
+                </IonFabButton>
               </>
             ) : null}
           </IonFab>
@@ -170,7 +182,7 @@ const Board: React.FC = () => {
           <IonTitle>BlackJack!!</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+      <IonContent color="primary">
         {result ? (
           <>
             <h3>{result} won!!</h3>

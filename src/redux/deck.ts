@@ -74,21 +74,21 @@ export const initialDeal = (
       }
     }
     // for SPLIT CHECK
-    playerCards.pop();
-    playerCards.pop();
-    playerCards.push({
-      value: 'HA',
-      faceUp: true,
-    });
-    playerCards.push({
-      value: 'CK',
-      faceUp: true,
-    });
+    // playerCards.pop();
+    // playerCards.pop();
+    // playerCards.push({
+    //   value: 'HA',
+    //   faceUp: true,
+    // });
+    // playerCards.push({
+    //   value: 'CK',
+    //   faceUp: true,
+    // });
+    // END SPLIT CHECK
     if (checkPair(playerCards)) {
       // NOT PART OF SPLIT CHECK; LEAVE IN
       dispatch(offerSplit());
     }
-    // END SPLIT CHECK
     dispatch(setPlayerHand(playerCards));
     dispatch(setDealerHand(dealerCards));
     dispatch(initialDealActionCreator(shuffledDeck));

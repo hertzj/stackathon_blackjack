@@ -189,11 +189,7 @@ export const splitThunk = (): ThunkAction<void, RootState, unknown, Action> => {
       return dispatch(setResult(name));
     }
     if (splitVal === 21) {
-      // could have a split black jack field in the store instead
-      // and if that is true and you stay or bust on your normal hand
-      // then set the result that player wins
       dispatch(setSplitBJ());
-      // return dispatch(setResult(`${name} split`));
     }
   };
 };
