@@ -14,6 +14,7 @@ import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { doubleDownAction, getValue } from './score';
 import { Deck, Card } from '../utils';
+import { trackOptimalPlay } from './tracker';
 
 interface HandsAction {
   type: symbol;
@@ -177,6 +178,8 @@ export const splitThunk = (): ThunkAction<void, RootState, unknown, Action> => {
     dispatch(splitHand(playerHand, playerSplitHand));
     dispatch(getValue('player')); // think this will return the default case
     dispatch(getValue(SPLIT_HAND));
+    // or after hit
+    // dispatch(trackOptimalPlay(SPLIT_HAND));
   };
 };
 
