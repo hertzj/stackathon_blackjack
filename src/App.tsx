@@ -10,7 +10,7 @@ import {
   IonTabs,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { apps } from 'ionicons/icons';
+import { stats, logoGameControllerA } from 'ionicons/icons';
 import Home from './pages/Home';
 
 /* Core CSS required for Ionic components to work properly */
@@ -52,11 +52,11 @@ const App: React.FC = () => (
             <IonLabel>Home</IonLabel>
           </IonTabButton> */}
           <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={apps} />
+            <IonIcon icon={logoGameControllerA} />
             <IonLabel>Board</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={apps} />
+            <IonIcon icon={stats} />
             <IonLabel>Tracking</IonLabel>
           </IonTabButton>
           {/* <IonTabButton tab="tab4" href="/tab4">
