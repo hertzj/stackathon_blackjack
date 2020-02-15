@@ -26,8 +26,7 @@ const Tracking: React.FC = () => {
               <li>
                 `You had {trackingObj.yourHand} in your hand and the dealer was
                 showing a {trackingObj.dealerUpCard}. You should have{' '}
-                {trackingObj.play}. You...ADD THIS. Need to call at a different
-                time.`
+                {trackingObj.play}. You {trackingObj.move}.`
               </li>
             );
           })}

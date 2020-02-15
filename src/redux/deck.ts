@@ -94,7 +94,7 @@ export const initialDeal = (
     dispatch(initialDealActionCreator(shuffledDeck));
     dispatch(getValue('dealer'));
     dispatch(getValue(playerName));
-    dispatch(trackOptimalPlay());
+    // dispatch(trackOptimalPlay(playerName));
     if (getState().score.playerScore === 21) {
       return dispatch(setResult(playerName));
     }
@@ -155,7 +155,7 @@ export const hitParticipant = (
       dispatch(dealCardActionCreator(deck));
       dispatch(getValue(SPLIT_HAND));
       // need to have tracking account for split
-      dispatch(trackOptimalPlay());
+      // dispatch(trackOptimalPlay(SPLIT_HAND));
     };
   } else {
     // need to deal with splitting
@@ -170,7 +170,7 @@ export const hitParticipant = (
       dispatch(hitPlayer(newCard));
       dispatch(dealCardActionCreator(deck));
       dispatch(getValue(getState().player));
-      dispatch(trackOptimalPlay());
+      // dispatch(trackOptimalPlay(getState().player));
     };
   }
 };

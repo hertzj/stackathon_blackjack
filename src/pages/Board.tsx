@@ -20,6 +20,7 @@ import {
 import { resetStore } from '../store';
 import { splitThunk, declineSplit } from '../redux/hands';
 import { SPLIT_HAND, NORMAL } from '../redux/constants';
+import { trackOptimalPlay } from '../redux/tracker';
 
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
@@ -60,13 +61,16 @@ const Board: React.FC = () => {
   };
   const stay = () => {
     if (isSplit && activeHand === NORMAL) {
+      dispatch(trackOptimalPlay(name, 'stayed'));
       setStay(true);
       dispatch(dealerHits());
     } else if (isSplit && activeHand === SPLIT_HAND) {
+      dispatch(trackOptimalPlay(SPLIT_HAND, 'stayed'));
       setSplitStay(true);
       setActiveHand(NORMAL);
       return;
     } else {
+      dispatch(trackOptimalPlay(name, 'stayed'));
       setStay(true);
       dispatch(dealerHits());
     }
@@ -74,10 +78,12 @@ const Board: React.FC = () => {
 
   const hit = () => {
     if (activeHand === NORMAL) {
+      dispatch(trackOptimalPlay(name, 'hit'));
       dispatch(hitParticipant(name));
       dispatch(declineSplit());
       setDouble(false);
     } else {
+      dispatch(trackOptimalPlay(SPLIT_HAND, 'hit'));
       dispatch(hitParticipant(SPLIT_HAND));
       setSplitDouble(false);
     }
@@ -85,9 +91,11 @@ const Board: React.FC = () => {
 
   const doubleDown = () => {
     if (activeHand === SPLIT_HAND) {
+      dispatch(trackOptimalPlay(SPLIT_HAND, 'doubled down'));
       dispatch(doubleDownThunk(SPLIT_HAND));
       setSplitDouble(false);
     } else {
+      dispatch(trackOptimalPlay(name, 'doubled down'));
       dispatch(doubleDownThunk(NORMAL));
       setDouble(false);
     }
@@ -95,6 +103,7 @@ const Board: React.FC = () => {
   };
 
   const split = () => {
+    dispatch(trackOptimalPlay(name, 'split'));
     dispatch(splitThunk());
     setSplitDeal(true);
     setSplitDouble(true);

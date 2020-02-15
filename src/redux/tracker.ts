@@ -2,7 +2,7 @@ import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { PlayerCard } from '../utils';
-import { NEW_TRACK } from './constants';
+import { NEW_TRACK, SPLIT_HAND } from './constants';
 
 interface Chart {
   2: string[];
@@ -36,6 +36,15 @@ export const optimalPlayChart: Chart = {
     'hit',
     'hit',
     'hit',
+    'split',
+    'stay',
+    'split',
+    'split',
+    'split',
+    'double',
+    'hit',
+    'split',
+    'split',
   ],
   3: [
     'stay',
@@ -55,6 +64,15 @@ export const optimalPlayChart: Chart = {
     'hit',
     'hit',
     'hit',
+    'split',
+    'stay',
+    'split',
+    'split',
+    'split',
+    'double',
+    'hit',
+    'split',
+    'split',
   ],
   4: [
     'stay',
@@ -74,6 +92,15 @@ export const optimalPlayChart: Chart = {
     'double',
     'hit',
     'hit',
+    'split',
+    'stay',
+    'split',
+    'split',
+    'split',
+    'double',
+    'hit',
+    'split',
+    'split',
   ],
   5: [
     'stay',
@@ -93,6 +120,15 @@ export const optimalPlayChart: Chart = {
     'double',
     'double',
     'double',
+    'split',
+    'stay',
+    'split',
+    'split',
+    'split',
+    'double',
+    'split',
+    'split',
+    'split',
   ],
   6: [
     'stay',
@@ -112,6 +148,15 @@ export const optimalPlayChart: Chart = {
     'double',
     'double',
     'double',
+    'split',
+    'stay',
+    'split',
+    'split',
+    'split',
+    'double',
+    'split',
+    'split',
+    'split',
   ],
   7: [
     'stay',
@@ -131,6 +176,15 @@ export const optimalPlayChart: Chart = {
     'hit',
     'hit',
     'hit',
+    'split',
+    'stay',
+    'stay',
+    'split',
+    'hit',
+    'double',
+    'hit',
+    'split',
+    'split',
   ],
   8: [
     'stay',
@@ -147,6 +201,15 @@ export const optimalPlayChart: Chart = {
     'stay',
     'hit',
     'hit',
+    'hit',
+    'hit',
+    'hit',
+    'split',
+    'stay',
+    'split',
+    'hit',
+    'hit',
+    'double',
     'hit',
     'hit',
     'hit',
@@ -169,6 +232,15 @@ export const optimalPlayChart: Chart = {
     'hit',
     'hit',
     'hit',
+    'split',
+    'stay',
+    'split',
+    'hit',
+    'hit',
+    'double',
+    'hit',
+    'hit',
+    'hit',
   ],
   10: [
     'stay',
@@ -181,6 +253,15 @@ export const optimalPlayChart: Chart = {
     'hit',
     'hit',
     'hit',
+    'stay',
+    'hit',
+    'hit',
+    'hit',
+    'hit',
+    'hit',
+    'hit',
+    'split',
+    'stay',
     'stay',
     'hit',
     'hit',
@@ -207,15 +288,22 @@ export const optimalPlayChart: Chart = {
     'hit',
     'hit',
     'hit',
+    'split',
+    'stay',
+    'stay',
+    'hit',
+    'hit',
+    'hit',
+    'hit',
+    'hit',
+    'hit',
   ],
 };
 
-export const trackOptimalPlay = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  Action
-> => {
+export const trackOptimalPlay = (
+  playerHand: string,
+  move: string
+): ThunkAction<void, RootState, unknown, Action> => {
   return (dispatch, getState) => {
     // 1) find dealer up card
     // @ts-ignore
@@ -238,10 +326,13 @@ export const trackOptimalPlay = (): ThunkAction<
       }
       return card.value;
     });
+    // might need to add that we aren't already split; coudl get from store
     if (
       playerCardValues.length === 2 &&
-      playerCardValues[0].slice(1) === playerCardValues[1].slice(1)
+      playerCardValues[0].slice(1) === playerCardValues[1].slice(1) &&
+      playerHand !== SPLIT_HAND
     ) {
+      console.log('hi');
       let cardVal = playerCardValues[0].slice(1);
       if (cardVal === '0') cardVal = '10';
       const mapCardToIdx = {
@@ -256,11 +347,19 @@ export const trackOptimalPlay = (): ThunkAction<
         3: 24,
         2: 25,
       };
-    }
+      //@ts-ignore
+      const chartIndexToCheck: string = mapCardToIdx[cardVal];
+      //@ts-ignore
+      const optimalPlay = optimalPlayChart[dealerCardVal][chartIndexToCheck];
 
-    // this will be a problem if dealt two aces...
-    // will probably want to return out to another function
-    else if (
+      const tracker = {
+        play: optimalPlay,
+        yourHand: `${cardVal}, ${cardVal}`,
+        move,
+        dealerUpCard: dealerCardVal,
+      };
+      dispatch(newPlayToTrack(tracker));
+    } else if (
       playerCardValues.length === 2 &&
       playerCardValues.indexOf('A') > -1
     ) {
@@ -288,12 +387,18 @@ export const trackOptimalPlay = (): ThunkAction<
       const tracker = {
         play: optimalPlay,
         yourHand: `A, ${playerCardValues[otherIndex]}`,
+        move,
         dealerUpCard: dealerCardVal,
       };
       dispatch(newPlayToTrack(tracker));
     } else {
+      // if split hand, have playerHandVal and PlayerHandString go from split
       let playerHandVal: number = getState().score.playerScore;
+      if (playerHand === SPLIT_HAND) {
+        playerHandVal = getState().score.playerSplitScore;
+      }
       let playerHandValString: string;
+
       if (playerHandVal > 16) playerHandValString = '17';
       else if (playerHandVal < 9) playerHandValString = '8';
       else {
@@ -318,6 +423,7 @@ export const trackOptimalPlay = (): ThunkAction<
       const tracker = {
         play: optimalPlay,
         yourHand: playerHandValString,
+        move,
         dealerUpCard: dealerCardVal,
       };
       dispatch(newPlayToTrack(tracker));
@@ -366,6 +472,7 @@ const turnObjExample = {
 export interface TrackerObject {
   play: string;
   yourHand: string;
+  move: string;
   dealerUpCard: string;
 }
 
