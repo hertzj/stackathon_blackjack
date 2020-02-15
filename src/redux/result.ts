@@ -32,7 +32,8 @@ export const findWinner = (): ThunkAction<void, RootState, unknown, Action> => {
     const dealerBust = getState().score.dealerBust;
     //@ts-ignore
     const isSplit = getState().hands.split;
-    if (playerBust && !isSplit) {
+
+    if (playerBust && isSplit === false) {
       return dispatch(setResult('dealer'));
     }
     if (playerBust && playerSplitBust) {

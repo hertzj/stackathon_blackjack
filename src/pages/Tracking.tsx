@@ -37,12 +37,12 @@ const Tracking: React.FC = () => {
             let splitHand = trackingObj.split;
             return (
               <li key={idx}>
-                `You had {hasAce ? `${hand} ` : ''}
+                You had {hasAce ? `${hand} ` : ''}
                 {!hasAce && !over16 ? `${hand} ` : ''}
                 {!hasAce && over16 ? `${hand} or greater ` : ''}
                 in your {splitHand ? 'split' : ''} hand and the dealer was
                 showing a {trackingObj.dealerUpCard}. The correct move was to{' '}
-                {trackingObj.play}. You {trackingObj.move}.`
+                {trackingObj.play}. You {trackingObj.move}.
               </li>
             );
           })}

@@ -24,7 +24,16 @@ const DealerHand: React.FC = () => {
   }
   return (
     <>
-      {dealerBust ? <h1>hooray, the dealer busted!</h1> : null}
+      {dealerBust ? (
+        <h5
+          style={{
+            color: 'dodgerBlue',
+            textAlign: 'center',
+          }}
+        >
+          hooray, the dealer busted!
+        </h5>
+      ) : null}
       <h5>Dealer hand:</h5>
       <IonGrid fixed>
         <IonRow>

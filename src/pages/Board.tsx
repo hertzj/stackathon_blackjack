@@ -34,6 +34,16 @@ import { trackOptimalPlay } from '../redux/tracker';
 import { NamePopOver } from './NamePopOver';
 import { newGame } from '../redux';
 
+const winStyles = {
+  color: 'dodgerBlue',
+  textAlign: 'center',
+};
+
+const loseStyles = {
+  color: 'tomato',
+  textAlign: 'center',
+};
+
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
   const [dealStatus, setDeal] = useState(false);
@@ -225,10 +235,15 @@ const Board: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent color="primary">
-        <NamePopOver />
+        {name ? null : <NamePopOver />}
         {result ? (
           <>
-            <h3>{result} won!!</h3>
+            <h3
+              //@ts-ignore
+              style={result === 'dealer' ? loseStyles : winStyles}
+            >
+              {result} won!
+            </h3>
             <IonFab vertical="bottom" horizontal="start" slot="fixed">
               <IonFabButton color="medium" onClick={() => startNewGame()}>
                 <IonIcon icon={refresh} />
