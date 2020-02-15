@@ -49,6 +49,12 @@ export const shuffle: Shuffle = unshuffledDeck => {
   return shuffledDeck;
 };
 
+export const checkPair = (playerHand: PlayerCard[]): boolean => {
+  let val1: string = playerHand[0].value.slice(1);
+  let val2: string = playerHand[1].value.slice(1);
+  return val1 === val2;
+};
+
 export interface PlayerCard {
   value: string;
   faceUp: boolean;

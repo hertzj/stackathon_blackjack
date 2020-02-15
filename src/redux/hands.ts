@@ -3,17 +3,26 @@ import {
   SET_DEALER_HAND,
   HIT_PLAYER,
   HIT_DEALER,
+  OFFER_SPLIT,
+  SPLIT,
+  SPLIT_HAND,
+  HIT_SPLIT_PLAYER,
+  SET_SPLIT_HAND,
 } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { doubleDownAction, getValue } from './score';
+import { Deck, Card } from '../utils';
 
 interface HandsAction {
   type: symbol;
   playerHand?: PlayerCard[];
   dealerHand?: PlayerCard[];
+  playerSplitHand?: PlayerCard[];
   card?: PlayerCard;
+  offerSplit?: boolean;
+  split?: boolean;
 }
 
 export interface PlayerCard {
@@ -35,9 +44,23 @@ export const setDealerHand = (dealerHand: PlayerCard[]): HandsAction => {
   };
 };
 
+export const setSplitHand = (playerSplitHand: PlayerCard[]): HandsAction => {
+  return {
+    type: SET_SPLIT_HAND,
+    playerSplitHand,
+  };
+};
+
 export const hitPlayer = (card: PlayerCard): HandsAction => {
   return {
     type: HIT_PLAYER,
+    card,
+  };
+};
+
+export const hitSplit = (card: PlayerCard): HandsAction => {
+  return {
+    type: HIT_SPLIT_PLAYER,
     card,
   };
 };
@@ -48,6 +71,35 @@ export const hitDealer = (card: PlayerCard): HandsAction => {
     card,
   };
 };
+
+export const offerSplit = (): HandsAction => {
+  return {
+    type: OFFER_SPLIT,
+    offerSplit: true,
+  };
+};
+
+export const declineSplit = (): HandsAction => {
+  return {
+    type: OFFER_SPLIT,
+    offerSplit: false,
+  };
+};
+
+export const splitHand = (
+  playerHand: PlayerCard[],
+  playerSplitHand: PlayerCard[]
+): HandsAction => {
+  return {
+    type: SPLIT,
+    offerSplit: false,
+    split: true,
+    playerHand,
+    playerSplitHand,
+  };
+};
+
+// thunks
 
 export const flipCard = (): ThunkAction<void, RootState, unknown, Action> => {
   return (dispatch, getState) => {
@@ -78,10 +130,53 @@ export const flipPlayerCard = (): ThunkAction<
         flipped = true;
       }
     });
+    //@ts-ignore
+    const splitCards = getState().hands.playerSplitHand;
+    if (splitCards.length) {
+      splitCards.forEach((card: PlayerCard) => {
+        let { faceUp } = card;
+        if (!faceUp) {
+          card.faceUp = true;
+          flipped = true;
+        }
+      });
+    }
     if (!flipped) return null;
     dispatch(setPlayerHand(playerCards));
     dispatch(doubleDownAction(false));
+    if (splitCards.length) {
+      dispatch(setSplitHand(splitCards));
+      dispatch(getValue(SPLIT_HAND));
+    }
     dispatch(getValue(getState().player));
+  };
+};
+
+export const splitThunk = (): ThunkAction<void, RootState, unknown, Action> => {
+  return (dispatch, getState) => {
+    // @ts-ignore
+    const currentHand: PlayerCard[] = getState().hands.playerHand;
+    const deck: Deck = getState().deck;
+    const playerHand = [currentHand[0]];
+    const playerSplitHand = [currentHand[1]];
+
+    for (let i = 0; i < 2; i++) {
+      // @ts-ignore
+      const card: Card = deck.pop();
+      const newCard: PlayerCard = {
+        value: card,
+        faceUp: true,
+      };
+      if (i === 0) {
+        playerHand.push(newCard);
+      } else {
+        playerSplitHand.push(newCard);
+      }
+    }
+
+    dispatch(splitHand(playerHand, playerSplitHand));
+    dispatch(getValue('player')); // think this will return the default case
+    dispatch(getValue(SPLIT_HAND));
   };
 };
 
@@ -89,6 +184,8 @@ const initialState = {
   playerHand: [],
   dealerHand: [],
   playerSplitHand: [],
+  offerSplit: false,
+  split: false,
 };
 
 const handsReducer = (state = initialState, action: HandsAction) => {
@@ -105,16 +202,43 @@ const handsReducer = (state = initialState, action: HandsAction) => {
         dealerHand: action.dealerHand,
       };
     }
+    case SET_SPLIT_HAND: {
+      return {
+        ...state,
+        playerSplitHand: action.playerSplitHand,
+      };
+    }
     case HIT_PLAYER: {
       return {
         ...state,
         playerHand: [...state.playerHand, action.card],
       };
     }
+    case HIT_SPLIT_PLAYER: {
+      return {
+        ...state,
+        playerSplitHand: [...state.playerSplitHand, action.card],
+      };
+    }
     case HIT_DEALER: {
       return {
         ...state,
         dealerHand: [...state.dealerHand, action.card],
+      };
+    }
+    case OFFER_SPLIT: {
+      return {
+        ...state,
+        offerSplit: action.offerSplit,
+      };
+    }
+    case SPLIT: {
+      return {
+        ...state,
+        offerSplit: action.offerSplit,
+        split: action.split,
+        playerHand: action.playerHand,
+        playerSplitHand: action.playerSplitHand,
       };
     }
     default:

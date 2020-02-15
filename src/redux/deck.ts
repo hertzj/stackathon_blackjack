@@ -1,12 +1,14 @@
-import { INITIAL_DEAL, DEAL_CARD } from './constants';
+import { INITIAL_DEAL, DEAL_CARD, SPLIT_HAND } from './constants';
 import {
   setPlayerHand,
   setDealerHand,
   hitDealer,
   hitPlayer,
   flipCard,
+  offerSplit,
+  hitSplit,
 } from './hands';
-import { shuffle, fullDeck, PlayerCard } from '../utils';
+import { shuffle, fullDeck, PlayerCard, checkPair } from '../utils';
 import { getValue, doubleDownAction } from './score';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -71,6 +73,22 @@ export const initialDeal = (
         dealerCards.push(handCard);
       }
     }
+    // for SPLIT CHECK
+    playerCards.pop();
+    playerCards.pop();
+    playerCards.push({
+      value: 'HA',
+      faceUp: true,
+    });
+    playerCards.push({
+      value: 'CA',
+      faceUp: true,
+    });
+    if (checkPair(playerCards)) {
+      // NOT PART OF SPLIT CHECK; LEAVE IN
+      dispatch(offerSplit());
+    }
+    // END SPLIT CHECK
     dispatch(setPlayerHand(playerCards));
     dispatch(setDealerHand(dealerCards));
     dispatch(initialDealActionCreator(shuffledDeck));
@@ -83,12 +101,9 @@ export const initialDeal = (
   };
 };
 
-export const doubleDownThunk = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  Action
-> => {
+export const doubleDownThunk = (
+  activeHand: string
+): ThunkAction<void, RootState, unknown, Action> => {
   return (dispatch, getState) => {
     const deck: Deck = getState().deck;
     //@ts-ignore
@@ -98,9 +113,15 @@ export const doubleDownThunk = (): ThunkAction<
       faceUp: false,
     };
     dispatch(doubleDownAction(true));
-    dispatch(hitPlayer(newCard));
     dispatch(dealCardActionCreator(deck));
-    dispatch(getValue(getState().player));
+
+    if (activeHand === SPLIT_HAND) {
+      dispatch(hitSplit(newCard));
+      dispatch(getValue(SPLIT_HAND));
+    } else {
+      dispatch(hitPlayer(newCard));
+      dispatch(getValue(getState().player));
+    }
   };
 };
 
@@ -120,6 +141,21 @@ export const hitParticipant = (
       dispatch(hitDealer(newCard));
       dispatch(dealCardActionCreator(deck));
       dispatch(getValue('dealer'));
+    };
+  } else if (participant === SPLIT_HAND) {
+    return (dispatch, getState) => {
+      const deck: Deck = getState().deck;
+      // @ts-ignore
+      const card: Card = deck.pop();
+      const newCard: PlayerCard = {
+        value: card,
+        faceUp: true,
+      };
+      dispatch(hitSplit(newCard));
+      dispatch(dealCardActionCreator(deck));
+      dispatch(getValue(SPLIT_HAND));
+      // need to have tracking account for split
+      dispatch(trackOptimalPlay());
     };
   } else {
     // need to deal with splitting

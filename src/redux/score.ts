@@ -4,6 +4,7 @@ import {
   UPDATE_PLAYER_SCORE,
   UPDATE_SPLIT_SCORE,
   DOUBLE_DOWN,
+  SPLIT_HAND,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
 import { findWinner } from './result';
@@ -40,7 +41,7 @@ export const updateScore = (
       score,
       busted,
     };
-  } else if (playerName === 'split') {
+  } else if (playerName === SPLIT_HAND) {
     return {
       type: UPDATE_SPLIT_SCORE,
       score,
@@ -70,7 +71,7 @@ export const getValue = (playerName: string) => {
     case 'dealer':
       hand = 'dealerHand';
       break;
-    case 'split':
+    case SPLIT_HAND:
       hand = 'playerSplitHand';
       break;
     default:
@@ -105,13 +106,15 @@ export const getValue = (playerName: string) => {
     }
     if (value > 21 && flippedCard === false) {
       dispatch(updateScore(playerName, value, true));
-      return dispatch(findWinner());
-    }
-    if (value > 21 && playerName === 'dealer') {
+      if (hand === 'playerHand') {
+        return dispatch(findWinner());
+      }
+    } else if (value > 21 && playerName === 'dealer') {
       dispatch(updateScore(playerName, value, true));
-      return dispatch(findWinner());
+      dispatch(findWinner());
+    } else {
+      dispatch(updateScore(playerName, value, false));
     }
-    dispatch(updateScore(playerName, value, false));
   };
 };
 
