@@ -1,4 +1,4 @@
-import { SET_WINNER } from './constants';
+import { SET_WINNER, NEW_GAME } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
@@ -60,6 +60,9 @@ const resultReducer = (state = initialState, action: ResultAction) => {
   switch (action.type) {
     case SET_WINNER: {
       return action.winner;
+    }
+    case NEW_GAME: {
+      return initialState;
     }
     default:
       return state;

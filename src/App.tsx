@@ -10,8 +10,7 @@ import {
   IonTabs,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { apps } from 'ionicons/icons';
-import Home from './pages/Home';
+import { stats, logoGameControllerA } from 'ionicons/icons';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -39,22 +38,17 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/tab1" component={Home} exact={true} />
-          <Route path="/tab2" component={Board} exact={true} />
-          <Route path="/tab3" component={Tracking} exact={true} />
+          <Route path="/tab1" component={Board} exact={true} />
+          <Route path="/tab2" component={Tracking} exact={true} />
           <Route exact path="/" render={() => <Redirect to="/tab1" />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={apps} />
-            <IonLabel>Home</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={apps} />
+            <IonIcon icon={logoGameControllerA} />
             <IonLabel>Board</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={apps} />
+          <IonTabButton tab="tab2" href="/tab2">
+            <IonIcon icon={stats} />
             <IonLabel>Tracking</IonLabel>
           </IonTabButton>
         </IonTabBar>

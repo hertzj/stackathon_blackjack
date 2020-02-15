@@ -4,8 +4,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonFab,
-  IonFabButton,
 } from '@ionic/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -17,7 +15,9 @@ const Tracking: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonTitle>How Well Have You Played?</IonTitle>
+        <IonToolbar>
+          <IonTitle>Playing History</IonTitle>
+        </IonToolbar>
       </IonHeader>
       <IonContent>
         <ul>

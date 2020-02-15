@@ -8,13 +8,13 @@ import {
   SPLIT_HAND,
   HIT_SPLIT_PLAYER,
   SET_SPLIT_HAND,
+  NEW_GAME,
 } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { doubleDownAction, getValue, setSplitBJ } from './score';
 import { Deck, Card } from '../utils';
-import { trackOptimalPlay } from './tracker';
 import { setResult } from './result';
 
 interface HandsAction {
@@ -189,11 +189,7 @@ export const splitThunk = (): ThunkAction<void, RootState, unknown, Action> => {
       return dispatch(setResult(name));
     }
     if (splitVal === 21) {
-      // could have a split black jack field in the store instead
-      // and if that is true and you stay or bust on your normal hand
-      // then set the result that player wins
       dispatch(setSplitBJ());
-      // return dispatch(setResult(`${name} split`));
     }
   };
 };
@@ -258,6 +254,9 @@ const handsReducer = (state = initialState, action: HandsAction) => {
         playerHand: action.playerHand,
         playerSplitHand: action.playerSplitHand,
       };
+    }
+    case NEW_GAME: {
+      return initialState;
     }
     default:
       return state;

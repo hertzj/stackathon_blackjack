@@ -1,4 +1,4 @@
-import { INITIAL_DEAL, DEAL_CARD, SPLIT_HAND } from './constants';
+import { INITIAL_DEAL, DEAL_CARD, SPLIT_HAND, NEW_GAME } from './constants';
 import {
   setPlayerHand,
   setDealerHand,
@@ -14,7 +14,6 @@ import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { findWinner, setResult } from './result';
-import { trackOptimalPlay } from './tracker';
 
 export type Card = string;
 export type Deck = Card[];
@@ -74,21 +73,20 @@ export const initialDeal = (
       }
     }
     // for SPLIT CHECK
-    playerCards.pop();
-    playerCards.pop();
-    playerCards.push({
-      value: 'HA',
-      faceUp: true,
-    });
-    playerCards.push({
-      value: 'CK',
-      faceUp: true,
-    });
+    // playerCards.pop();
+    // playerCards.pop();
+    // playerCards.push({
+    //   value: 'HA',
+    //   faceUp: true,
+    // });
+    // playerCards.push({
+    //   value: 'CA',
+    //   faceUp: true,
+    // });
+    // END SPLIT CHECK
     if (checkPair(playerCards)) {
-      // NOT PART OF SPLIT CHECK; LEAVE IN
       dispatch(offerSplit());
     }
-    // END SPLIT CHECK
     dispatch(setPlayerHand(playerCards));
     dispatch(setDealerHand(dealerCards));
     dispatch(initialDealActionCreator(shuffledDeck));
@@ -205,6 +203,8 @@ const deckReducer = (state = initialState, action: DeckAction) => {
       return action.cards;
     case DEAL_CARD:
       return action.cards;
+    case NEW_GAME:
+      return initialState;
     default:
       return state;
   }

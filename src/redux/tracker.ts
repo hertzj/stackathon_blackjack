@@ -496,10 +496,8 @@ const newPlayToTrack = (tracker: TrackerObject) => {
   };
 };
 
-// THURSDAY AFTERNOON:
-// MAKE THUNK GET THE RIGHT DATA AND SEND IT TO THE ACTION CREATOR
-// THEN FIND A PLACE TO STORE THE DATA FROM THE STORE
-// LIKE A THIRD TAB
+// FIGURE OUT NEW GAME CASE
+// MIGHT NEED TO CHANGE STATE TO AN ARRAY OF ARRAYS
 
 const trackerReducer = (state = initialState, action: TrackerAction) => {
   switch (action.type) {

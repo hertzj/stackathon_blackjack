@@ -12,8 +12,8 @@
 }
 
 .card {
-  width: 75px;
-  height: 150px;
+  width: 50px;
+  height: 100px;
   background: #ccc5b3;
   margin: 25px auto;
   -moz-border-radius: 12px;
@@ -69,21 +69,21 @@
   animation: fadeInText 1.2s 0.1s forwards;
 }
 .card .content h1 {
-  font-size: 20px;
-  line-height: 30px;
+  font-size: 15px;
+  line-height: 20px;
   margin: 0;
 }
 .card .content h2 {
   margin: 0;
-  font-size: 18px;
-  line-height: 30px;
+  font-size: 12px;
+  line-height: 20px;
 }
 .card .content h2 sup {
-  font-size: 10px;
+  font-size: 7px;
 }
 .card .mark {
   position: absolute;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: bold;
   top: 8px;
   left: 16px;

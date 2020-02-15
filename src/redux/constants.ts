@@ -18,5 +18,6 @@ export const NEW_TRACK = Symbol('NEW_TRACK');
 export const OFFER_SPLIT = Symbol('OFFER_SPLIT');
 export const SPLIT = Symbol('SPLIT');
 export const SPLIT_BLACK_JACK = Symbol('SPLIT_BLACK_JACK');
+export const NEW_GAME = Symbol('NEW_GAME');
 export const SPLIT_HAND = 'splitHand';
 export const NORMAL = 'NORMAL';
