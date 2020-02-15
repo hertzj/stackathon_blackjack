@@ -6,6 +6,7 @@ import {
   IonToolbar,
   IonFab,
   IonFabButton,
+  IonFabList,
 } from '@ionic/react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -110,13 +111,64 @@ const Board: React.FC = () => {
     setActiveHand(SPLIT_HAND);
   };
 
+  const buttonList = () => {
+    return (
+      <IonFab vertical="bottom" horizontal="start" slot="fixed">
+        <IonFabButton color="medium">Play</IonFabButton>
+        <IonFabList side="end">
+          {!stayStatus && dealStatus && activeHand === NORMAL && !playerBust ? (
+            <>
+              {doubleDownStatus ? (
+                <IonFabButton color="medium" onClick={() => doubleDown()}>
+                  Double Down
+                </IonFabButton>
+              ) : (
+                ''
+              )}
+              {offerSplit ? (
+                <IonFabButton color="medium" onClick={() => split()}>
+                  Split!
+                </IonFabButton>
+              ) : (
+                ''
+              )}
+              <IonFabButton color="medium" onClick={() => hit()}>
+                Hit me!
+              </IonFabButton>
+              <IonFabButton color="medium" onClick={() => stay()}>
+                Stay
+              </IonFabButton>
+            </>
+          ) : (
+            ''
+          )}
+          {isSplit && splitDealStatus && !splitStayStatus && !splitBust ? (
+            <>
+              {splitDoubleDownStatus ? (
+                <IonFabButton color="medium" onClick={() => doubleDown()}>
+                  split double down
+                </IonFabButton>
+              ) : null}
+              <IonFabButton color="medium" onClick={() => hit()}>
+                split hit
+              </IonFabButton>
+              <IonFabButton color="medium" onClick={() => stay()}>
+                split stay
+              </IonFabButton>
+            </>
+          ) : null}
+        </IonFabList>
+      </IonFab>
+    );
+  };
+
   const buttons = () => {
     if (result) return null;
     else {
       return (
         <>
           {dealStatus ? (
-            ''
+            buttonList()
           ) : (
             <IonFab vertical="bottom" horizontal="center" slot="fixed">
               <IonFabButton color="medium" onClick={() => startGame()}>
@@ -124,52 +176,6 @@ const Board: React.FC = () => {
               </IonFabButton>
             </IonFab>
           )}
-          <IonFab vertical="bottom" horizontal="start" slot="fixed">
-            {!stayStatus &&
-            dealStatus &&
-            activeHand === NORMAL &&
-            !playerBust ? (
-              <>
-                {doubleDownStatus ? (
-                  <IonFabButton color="medium" onClick={() => doubleDown()}>
-                    Double Down
-                  </IonFabButton>
-                ) : (
-                  ''
-                )}
-                {offerSplit ? (
-                  <IonFabButton color="medium" onClick={() => split()}>
-                    Split!
-                  </IonFabButton>
-                ) : (
-                  ''
-                )}
-                <IonFabButton color="medium" onClick={() => hit()}>
-                  Hit me!
-                </IonFabButton>
-                <IonFabButton color="medium" onClick={() => stay()}>
-                  Stay
-                </IonFabButton>
-              </>
-            ) : (
-              ''
-            )}
-            {isSplit && splitDealStatus && !splitStayStatus && !splitBust ? (
-              <>
-                {splitDoubleDownStatus ? (
-                  <IonFabButton color="medium" onClick={() => doubleDown()}>
-                    split double down
-                  </IonFabButton>
-                ) : null}
-                <IonFabButton color="medium" onClick={() => hit()}>
-                  split hit
-                </IonFabButton>
-                <IonFabButton color="medium" onClick={() => stay()}>
-                  split stay
-                </IonFabButton>
-              </>
-            ) : null}
-          </IonFab>
         </>
       );
     }
