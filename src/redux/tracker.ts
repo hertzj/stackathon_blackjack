@@ -302,7 +302,8 @@ export const optimalPlayChart: Chart = {
 
 export const trackOptimalPlay = (
   playerHand: string,
-  move: string
+  move: string,
+  split: boolean
 ): ThunkAction<void, RootState, unknown, Action> => {
   return (dispatch, getState) => {
     // 1) find dealer up card
@@ -357,6 +358,7 @@ export const trackOptimalPlay = (
         yourHand: `${cardVal}, ${cardVal}`,
         move,
         dealerUpCard: dealerCardVal,
+        split,
       };
       dispatch(newPlayToTrack(tracker));
     } else if (
@@ -389,6 +391,7 @@ export const trackOptimalPlay = (
         yourHand: `A, ${playerCardValues[otherIndex]}`,
         move,
         dealerUpCard: dealerCardVal,
+        split,
       };
       dispatch(newPlayToTrack(tracker));
     } else {
@@ -425,6 +428,7 @@ export const trackOptimalPlay = (
         yourHand: playerHandValString,
         move,
         dealerUpCard: dealerCardVal,
+        split,
       };
       dispatch(newPlayToTrack(tracker));
     }
@@ -474,6 +478,7 @@ export interface TrackerObject {
   yourHand: string;
   move: string;
   dealerUpCard: string;
+  split: boolean;
 }
 
 const initialState: TrackerObject[] = [];

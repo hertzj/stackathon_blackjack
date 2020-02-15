@@ -21,11 +21,27 @@ const Tracking: React.FC = () => {
       </IonHeader>
       <IonContent>
         <ul>
-          {trackingArr.map((trackingObj: TrackerObject) => {
+          {trackingArr.map((trackingObj: TrackerObject, idx: number) => {
+            let hand =
+              trackingObj.yourHand.indexOf('A') > -1
+                ? trackingObj.yourHand
+                : Number(trackingObj.yourHand);
+            let over16 = false;
+            let hasAce = true;
+            if (typeof hand === 'number') {
+              hasAce = false;
+              if (hand > 16) {
+                over16 = true;
+              }
+            }
+            let splitHand = trackingObj.split;
             return (
-              <li>
-                `You had {trackingObj.yourHand} in your hand and the dealer was
-                showing a {trackingObj.dealerUpCard}. You should have{' '}
+              <li key={idx}>
+                `You had {hasAce ? `${hand} ` : ''}
+                {!hasAce && !over16 ? `${hand} ` : ''}
+                {!hasAce && over16 ? `${hand} or greater ` : ''}
+                in your {splitHand ? 'split' : ''} hand and the dealer was
+                showing a {trackingObj.dealerUpCard}. The correct move was to{' '}
                 {trackingObj.play}. You {trackingObj.move}.`
               </li>
             );
