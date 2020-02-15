@@ -85,7 +85,7 @@ export const initialDeal = (
       faceUp: true,
     });
     if (checkPair(playerCards)) {
-      // should maybe be last thing
+      // NOT PART OF SPLIT CHECK; LEAVE IN
       dispatch(offerSplit());
     }
     // END SPLIT CHECK
@@ -101,12 +101,9 @@ export const initialDeal = (
   };
 };
 
-export const doubleDownThunk = (): ThunkAction<
-  void,
-  RootState,
-  unknown,
-  Action
-> => {
+export const doubleDownThunk = (
+  activeHand: string
+): ThunkAction<void, RootState, unknown, Action> => {
   return (dispatch, getState) => {
     const deck: Deck = getState().deck;
     //@ts-ignore
@@ -116,9 +113,15 @@ export const doubleDownThunk = (): ThunkAction<
       faceUp: false,
     };
     dispatch(doubleDownAction(true));
-    dispatch(hitPlayer(newCard));
     dispatch(dealCardActionCreator(deck));
-    dispatch(getValue(getState().player));
+
+    if (activeHand === SPLIT_HAND) {
+      dispatch(hitSplit(newCard));
+      dispatch(getValue(SPLIT_HAND));
+    } else {
+      dispatch(hitPlayer(newCard));
+      dispatch(getValue(getState().player));
+    }
   };
 };
 

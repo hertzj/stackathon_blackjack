@@ -7,6 +7,7 @@ import {
   SPLIT,
   SPLIT_HAND,
   HIT_SPLIT_PLAYER,
+  SET_SPLIT_HAND,
 } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -40,6 +41,13 @@ export const setDealerHand = (dealerHand: PlayerCard[]): HandsAction => {
   return {
     type: SET_DEALER_HAND,
     dealerHand,
+  };
+};
+
+export const setSplitHand = (playerSplitHand: PlayerCard[]): HandsAction => {
+  return {
+    type: SET_SPLIT_HAND,
+    playerSplitHand,
   };
 };
 
@@ -122,9 +130,24 @@ export const flipPlayerCard = (): ThunkAction<
         flipped = true;
       }
     });
+    //@ts-ignore
+    const splitCards = getState().hands.playerSplitHand;
+    if (splitCards.length) {
+      splitCards.forEach((card: PlayerCard) => {
+        let { faceUp } = card;
+        if (!faceUp) {
+          card.faceUp = true;
+          flipped = true;
+        }
+      });
+    }
     if (!flipped) return null;
     dispatch(setPlayerHand(playerCards));
     dispatch(doubleDownAction(false));
+    if (splitCards.length) {
+      dispatch(setSplitHand(splitCards));
+      dispatch(getValue(SPLIT_HAND));
+    }
     dispatch(getValue(getState().player));
   };
 };
@@ -177,6 +200,12 @@ const handsReducer = (state = initialState, action: HandsAction) => {
       return {
         ...state,
         dealerHand: action.dealerHand,
+      };
+    }
+    case SET_SPLIT_HAND: {
+      return {
+        ...state,
+        playerSplitHand: action.playerSplitHand,
       };
     }
     case HIT_PLAYER: {

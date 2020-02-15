@@ -19,9 +19,7 @@ import {
 } from '../redux/deck';
 import { resetStore } from '../store';
 import { splitThunk, declineSplit } from '../redux/hands';
-import { SPLIT_HAND } from '../redux/constants';
-
-const NORMAL = 'NORMAL';
+import { SPLIT_HAND, NORMAL } from '../redux/constants';
 
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
@@ -86,10 +84,14 @@ const Board: React.FC = () => {
   };
 
   const doubleDown = () => {
-    // need to do this for splitting
-    dispatch(doubleDownThunk());
-    setDouble(false);
-    stay();
+    if (activeHand === SPLIT_HAND) {
+      dispatch(doubleDownThunk(SPLIT_HAND));
+      setSplitDouble(false);
+    } else {
+      dispatch(doubleDownThunk(NORMAL));
+      setDouble(false);
+    }
+    // stay();
   };
 
   const split = () => {
@@ -160,7 +162,11 @@ const Board: React.FC = () => {
           )}
           {isSplit && splitDealStatus && !splitStayStatus && !splitBust ? (
             <>
-              {splitDoubleDownStatus ? <h1>offer split double down</h1> : null}
+              {splitDoubleDownStatus ? (
+                <IonFabButton onClick={() => doubleDown()}>
+                  split double down
+                </IonFabButton>
+              ) : null}
               <IonFabButton onClick={() => hit()}>split hit</IonFabButton>
               <IonFabButton onClick={() => stay()}>split stay</IonFabButton>
             </>
