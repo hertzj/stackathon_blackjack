@@ -238,9 +238,32 @@ export const trackOptimalPlay = (): ThunkAction<
       }
       return card.value;
     });
+    if (
+      playerCardValues.length === 2 &&
+      playerCardValues[0].slice(1) === playerCardValues[1].slice(1)
+    ) {
+      let cardVal = playerCardValues[0].slice(1);
+      if (cardVal === '0') cardVal = '10';
+      const mapCardToIdx = {
+        A: 17,
+        8: 17,
+        10: 18,
+        9: 19,
+        7: 20,
+        6: 21,
+        5: 22,
+        4: 23,
+        3: 24,
+        2: 25,
+      };
+    }
+
     // this will be a problem if dealt two aces...
     // will probably want to return out to another function
-    if (playerCardValues.length === 2 && playerCardValues.indexOf('A') > -1) {
+    else if (
+      playerCardValues.length === 2 &&
+      playerCardValues.indexOf('A') > -1
+    ) {
       const aceIndex: number = playerCardValues.indexOf('A');
       let otherIndex: number;
       aceIndex ? (otherIndex = 0) : (otherIndex = 1);
