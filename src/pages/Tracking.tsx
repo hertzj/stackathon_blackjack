@@ -4,6 +4,9 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonList,
+  IonItem,
+  IonListHeader,
 } from '@ionic/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -11,7 +14,11 @@ import { TrackerObject } from '../redux/tracker';
 
 const Tracking: React.FC = () => {
   // @ts-ignore
-  const trackingArr: TrackerObject[] = useSelector(state => state.tracker);
+  const current: TrackerObject[] = useSelector(state => state.tracker.current);
+  // @ts-ignore
+  let prior = useSelector(state => state.tracker.prior); // array of currents so to speak
+  prior.reverse();
+  const numPriorGames = prior.length;
   return (
     <IonPage>
       <IonHeader>
@@ -20,8 +27,9 @@ const Tracking: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <ul>
-          {trackingArr.map((trackingObj: TrackerObject, idx: number) => {
+        <IonList>
+          <IonListHeader>Current Game</IonListHeader>
+          {current.map((trackingObj: TrackerObject, idx: number) => {
             let hand =
               trackingObj.yourHand.indexOf('A') > -1
                 ? trackingObj.yourHand
@@ -36,17 +44,52 @@ const Tracking: React.FC = () => {
             }
             let splitHand = trackingObj.split;
             return (
-              <li key={idx}>
+              <IonItem key={idx}>
                 You had {hasAce ? `${hand} ` : ''}
                 {!hasAce && !over16 ? `${hand} ` : ''}
                 {!hasAce && over16 ? `${hand} or greater ` : ''}
                 in your {splitHand ? 'split' : ''} hand and the dealer was
                 showing a {trackingObj.dealerUpCard}. The correct move was to{' '}
                 {trackingObj.play}. You {trackingObj.move}.
-              </li>
+              </IonItem>
             );
           })}
-        </ul>
+        </IonList>
+        <IonList>
+          <IonListHeader>Prior Games</IonListHeader>
+          {prior.map((game: TrackerObject[], idx: number) => {
+            return (
+              <IonList key={idx}>
+                <IonListHeader>Game {numPriorGames - idx}</IonListHeader>
+                {game.map((trackingObj: TrackerObject, idx: number) => {
+                  let hand =
+                    trackingObj.yourHand.indexOf('A') > -1
+                      ? trackingObj.yourHand
+                      : Number(trackingObj.yourHand);
+                  let over16 = false;
+                  let hasAce = true;
+                  if (typeof hand === 'number') {
+                    hasAce = false;
+                    if (hand > 16) {
+                      over16 = true;
+                    }
+                  }
+                  let splitHand = trackingObj.split;
+                  return (
+                    <IonItem key={idx}>
+                      You had {hasAce ? `${hand} ` : ''}
+                      {!hasAce && !over16 ? `${hand} ` : ''}
+                      {!hasAce && over16 ? `${hand} or greater ` : ''}
+                      in your {splitHand ? 'split' : ''} hand and the dealer was
+                      showing a {trackingObj.dealerUpCard}. The correct move was
+                      to {trackingObj.play}. You {trackingObj.move}.
+                    </IonItem>
+                  );
+                })}
+              </IonList>
+            );
+          })}
+        </IonList>
       </IonContent>
     </IonPage>
   );

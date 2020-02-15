@@ -2,7 +2,7 @@ import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { PlayerCard } from '../utils';
-import { NEW_TRACK, SPLIT_HAND } from './constants';
+import { NEW_PLAY_TO_TRACK, SPLIT_HAND, NEW_GAME } from './constants';
 
 interface Chart {
   2: string[];
@@ -467,11 +467,11 @@ export const trackOptimalPlay = (
 // I'd like to track what should have happened and what situations were
 // so for each turn something like
 // so I want an array of those
-const turnObjExample = {
-  play: 'hit',
-  yourHand: '17+' || 'A, 7',
-  dealerUpCard: '5',
-};
+// const turnObjExample = {
+//   play: 'hit',
+//   yourHand: '17+' || 'A, 7',
+//   dealerUpCard: '5',
+// };
 
 export interface TrackerObject {
   play: string;
@@ -481,7 +481,17 @@ export interface TrackerObject {
   split: boolean;
 }
 
-const initialState: TrackerObject[] = [];
+// const initialState: TrackerObject[] = [];
+
+interface TrackerState {
+  current: TrackerObject[];
+  prior: TrackerObject[][];
+}
+
+const initialState: TrackerState = {
+  current: [],
+  prior: [],
+};
 
 // action creator
 interface TrackerAction {
@@ -491,7 +501,7 @@ interface TrackerAction {
 
 const newPlayToTrack = (tracker: TrackerObject) => {
   return {
-    type: NEW_TRACK,
+    type: NEW_PLAY_TO_TRACK,
     tracker,
   };
 };
@@ -501,8 +511,17 @@ const newPlayToTrack = (tracker: TrackerObject) => {
 
 const trackerReducer = (state = initialState, action: TrackerAction) => {
   switch (action.type) {
-    case NEW_TRACK:
-      return [...state, action.tracker];
+    case NEW_PLAY_TO_TRACK:
+      return {
+        ...state,
+        current: [...state.current, action.tracker],
+      };
+    case NEW_GAME: {
+      return {
+        prior: [...state.prior, state.current],
+        current: [],
+      };
+    }
     default:
       return state;
   }
