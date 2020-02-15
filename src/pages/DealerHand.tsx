@@ -38,11 +38,12 @@ const DealerHand: React.FC = () => {
   // @ts-ignore
   const dealerBust = useSelector(state => state.score.dealerBust);
   if (!dealerHand.length) {
-    return <h1>loading...</h1>;
+    return null;
   }
   return (
     <>
       {dealerBust ? <h1>hooray, the dealer busted!</h1> : null}
+      <h5>Dealer hand:</h5>
       <IonGrid fixed>
         <IonRow>
           {dealerHand.map((card: PlayerCard, idx: number) => {

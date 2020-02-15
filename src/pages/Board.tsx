@@ -22,6 +22,9 @@ import { resetStore } from '../store';
 import { splitThunk, declineSplit } from '../redux/hands';
 import { SPLIT_HAND, NORMAL } from '../redux/constants';
 import { trackOptimalPlay } from '../redux/tracker';
+import { NamePopOver } from './NamePopOver';
+import { setPlayer } from '../redux/player';
+import { newGame } from '../redux';
 
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
@@ -162,6 +165,17 @@ const Board: React.FC = () => {
     );
   };
 
+  const startNewGame = () => {
+    dispatch(newGame());
+    setDeal(false);
+    setStay(false);
+    setDouble(false);
+    setActiveHand(NORMAL);
+    setSplitStay(false);
+    setSplitDeal(false);
+    setSplitDouble(false);
+  };
+
   const buttons = () => {
     if (result) return null;
     else {
@@ -185,16 +199,22 @@ const Board: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>BlackJack!!</IonTitle>
+          <IonTitle>BlackJack</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent color="primary">
+        <NamePopOver />
         {result ? (
           <>
             <h3>{result} won!!</h3>
-            <IonFab vertical="bottom" horizontal="center" slot="fixed">
-              <IonFabButton onClick={() => dispatch(resetStore())}>
-                Start Over (DUH CHANGE THIS)!
+            <IonFab vertical="bottom" horizontal="start" slot="fixed">
+              <IonFabButton color="medium" onClick={() => startNewGame()}>
+                New Game
+              </IonFabButton>
+            </IonFab>
+            <IonFab vertical="bottom" horizontal="end" slot="fixed">
+              <IonFabButton color="medium" href="/tab1">
+                New Player
               </IonFabButton>
             </IonFab>
           </>
@@ -202,57 +222,25 @@ const Board: React.FC = () => {
           ''
         )}
         <DealerHand />
+        <div
+          style={{
+            margin: '5px 0',
+          }}
+        ></div>
         <Hand
           // @ts-ignore
           name={name}
         />
         {isSplit ? (
-          <Hand
-            //@ts-ignore
-            name={SPLIT_HAND}
-          />
+          <>
+            <div style={{ marginTop: '5px' }}></div>
+            <Hand
+              //@ts-ignore
+              name={SPLIT_HAND}
+            />
+          </>
         ) : null}
         {buttons()}
-        {/* {dealStatus ? (
-          ''
-        ) : (
-          <IonFab vertical="bottom" horizontal="center" slot="fixed">
-            <IonFabButton onClick={() => startGame()}>Deal me!</IonFabButton>
-          </IonFab>
-        )}
-        <IonFab vertical="bottom" horizontal="start" slot="fixed">
-          {!stayStatus && dealStatus && activeHand === NORMAL && !playerBust ? (
-            <>
-              {doubleDownStatus ? (
-                <IonFabButton onClick={() => doubleDown()}>
-                  Double Down
-                </IonFabButton>
-              ) : (
-                ''
-              )}
-              {offerSplit ? (
-                <IonFabButton onClick={() => split()}>Split!</IonFabButton>
-              ) : (
-                ''
-              )}
-              <IonFabButton onClick={() => hit()}>Hit me!</IonFabButton>
-              <IonFabButton onClick={() => stay()}>Stay</IonFabButton>
-            </>
-          ) : (
-            ''
-          )}
-          {isSplit && splitDealStatus && !splitStayStatus && !splitBust ? (
-            <>
-              {splitDoubleDownStatus ? (
-                <IonFabButton onClick={() => doubleDown()}>
-                  split double down
-                </IonFabButton>
-              ) : null}
-              <IonFabButton onClick={() => hit()}>split hit</IonFabButton>
-              <IonFabButton onClick={() => stay()}>split stay</IonFabButton>
-            </>
-          ) : null}
-        </IonFab> */}
       </IonContent>
     </IonPage>
   );

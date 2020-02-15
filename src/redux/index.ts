@@ -5,6 +5,13 @@ import playerReducer from './player';
 import scoreReducer from './score';
 import resultReducer from './result';
 import trackerReducer from './tracker';
+import { NEW_GAME } from './constants';
+
+export const newGame = () => {
+  return {
+    type: NEW_GAME,
+  };
+};
 
 const appReducer = combineReducers({
   deck: deckReducer,

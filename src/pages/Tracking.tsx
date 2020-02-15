@@ -17,7 +17,9 @@ const Tracking: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonTitle>How Well Have You Played?</IonTitle>
+        <IonToolbar>
+          <IonTitle>Playing History</IonTitle>
+        </IonToolbar>
       </IonHeader>
       <IonContent>
         <ul>

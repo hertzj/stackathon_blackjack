@@ -51,62 +51,68 @@ const Hand: React.FC = props => {
 
   const normalHand = () => {
     return (
-      <IonRow>
-        {playerHand.map((card: PlayerCard, idx: number) => {
-          const { value, faceUp } = card;
-          if (faceUp === false) {
+      <>
+        <h5>{`${name}'s hand:`}</h5>
+        <IonRow>
+          {playerHand.map((card: PlayerCard, idx: number) => {
+            const { value, faceUp } = card;
+            if (faceUp === false) {
+              return (
+                <IonItem key={idx} color="primary">
+                  <IonCol color="primary" sizeSm="2" key={idx}>
+                    <Card rank={null} suit={null} />
+                  </IonCol>
+                </IonItem>
+              );
+            }
+            const suit = value.slice(0, 1);
+            const cardVal = value.slice(1);
             return (
               <IonItem key={idx} color="primary">
                 <IonCol color="primary" sizeSm="2" key={idx}>
-                  <Card rank={null} suit={null} />
+                  <Card rank={cardVal} suit={suit} />
                 </IonCol>
               </IonItem>
             );
-          }
-          const suit = value.slice(0, 1);
-          const cardVal = value.slice(1);
-          return (
-            <IonItem key={idx} color="primary">
-              <IonCol color="primary" sizeSm="2" key={idx}>
-                <Card rank={cardVal} suit={suit} />
-              </IonCol>
-            </IonItem>
-          );
-        })}
-      </IonRow>
+          })}
+        </IonRow>
+      </>
     );
   };
 
   const splitHand = () => {
     return (
-      <IonRow>
-        {splitCards.map((card: PlayerCard, idx: number) => {
-          const { value, faceUp } = card;
-          if (faceUp === false) {
+      <>
+        <h5>Split hand:</h5>
+        <IonRow>
+          {splitCards.map((card: PlayerCard, idx: number) => {
+            const { value, faceUp } = card;
+            if (faceUp === false) {
+              return (
+                <IonItem color="primary" key={idx}>
+                  <IonCol sizeSm="2" key={idx}>
+                    <Card rank={null} suit={null} />
+                  </IonCol>
+                </IonItem>
+              );
+            }
+            const suit = value.slice(0, 1);
+            const cardVal = value.slice(1);
             return (
               <IonItem color="primary" key={idx}>
                 <IonCol sizeSm="2" key={idx}>
-                  <Card rank={null} suit={null} />
+                  <Card rank={cardVal} suit={suit} />
                 </IonCol>
               </IonItem>
             );
-          }
-          const suit = value.slice(0, 1);
-          const cardVal = value.slice(1);
-          return (
-            <IonItem color="primary" key={idx}>
-              <IonCol sizeSm="2" key={idx}>
-                <Card rank={cardVal} suit={suit} />
-              </IonCol>
-            </IonItem>
-          );
-        })}
-      </IonRow>
+          })}
+        </IonRow>
+      </>
     );
   };
 
   if (!playerHand.length) {
-    return <h1>loading...</h1>;
+    return null;
   }
   return (
     <>

@@ -8,6 +8,7 @@ import {
   SPLIT_HAND,
   HIT_SPLIT_PLAYER,
   SET_SPLIT_HAND,
+  NEW_GAME,
 } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -254,6 +255,9 @@ const handsReducer = (state = initialState, action: HandsAction) => {
         playerHand: action.playerHand,
         playerSplitHand: action.playerSplitHand,
       };
+    }
+    case NEW_GAME: {
+      return initialState;
     }
     default:
       return state;

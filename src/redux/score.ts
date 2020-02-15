@@ -6,6 +6,7 @@ import {
   DOUBLE_DOWN,
   SPLIT_HAND,
   SPLIT_BLACK_JACK,
+  NEW_GAME,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
 import { findWinner, setResult } from './result';
@@ -138,20 +139,18 @@ const scoreReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case RESET_SCORE:
       return initialState;
-    case UPDATE_PLAYER_SCORE: {
+    case UPDATE_PLAYER_SCORE:
       return {
         ...state,
         playerScore: action.score,
         playerBust: action.busted,
       };
-    }
-    case UPDATE_SPLIT_SCORE: {
+    case UPDATE_SPLIT_SCORE:
       return {
         ...state,
         playerSplitScore: action.score,
         playerSplitBust: action.busted,
       };
-    }
     case UPDATE_DEALER_SCORE:
       return {
         ...state,
@@ -168,6 +167,8 @@ const scoreReducer = (state = initialState, action: any) => {
         ...state,
         splitBlackJack: action.splitBlackJack,
       };
+    case NEW_GAME:
+      return initialState;
     default:
       return state;
   }

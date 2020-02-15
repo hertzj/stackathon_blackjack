@@ -40,29 +40,29 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/tab1" component={Home} exact={true} />
-          <Route path="/tab2" component={Board} exact={true} />
-          <Route path="/tab3" component={Tracking} exact={true} />
-          <Route path="/tab4" component={CardExample} exact={true} />
+          {/* <Route path="/tab1" component={Home} exact={true} /> */}
+          <Route path="/tab1" component={Board} exact={true} />
+          <Route path="/tab2" component={Tracking} exact={true} />
+          {/* <Route path="/tab4" component={CardExample} exact={true} /> */}
           <Route exact path="/" render={() => <Redirect to="/tab1" />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
+          {/* <IonTabButton tab="tab1" href="/tab1">
             <IonIcon icon={apps} />
             <IonLabel>Home</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
+          </IonTabButton> */}
+          <IonTabButton tab="tab1" href="/tab1">
             <IonIcon icon={apps} />
             <IonLabel>Board</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
+          <IonTabButton tab="tab2" href="/tab2">
             <IonIcon icon={apps} />
             <IonLabel>Tracking</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab4" href="/tab4">
+          {/* <IonTabButton tab="tab4" href="/tab4">
             <IonIcon icon={apps} />
             <IonLabel>Card</IonLabel>
-          </IonTabButton>
+          </IonTabButton> */}
         </IonTabBar>
       </IonTabs>
     </IonReactRouter>

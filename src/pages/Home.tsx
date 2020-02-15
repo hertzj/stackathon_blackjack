@@ -4,13 +4,13 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonFab,
-  IonFabButton,
+  IonButton,
 } from '@ionic/react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPlayer } from '../redux/player';
 import { initialDeal } from '../redux/deck';
+import { NamePopOver } from './NamePopOver';
 
 const Home: React.FC = () => {
   const [name, setName] = useState('');
@@ -25,18 +25,11 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <input type="text" onChange={ev => setName(ev.target.value)} />
-        <button onClick={() => dispatch(setPlayer(name))}>
+        <NamePopOver />
+        {/* <input type="text" onChange={ev => setName(ev.target.value)} />
+        <IonButton onClick={() => dispatch(setPlayer(name))}>
           Set your name!
-        </button>
-        {/* <IonFab vertical="bottom" horizontal="center" slot="fixed">
-          <IonFabButton
-            onClick={() => dispatch(initialDeal(name))}
-            href="/tab2"
-          >
-            Deal me!
-          </IonFabButton>
-        </IonFab> */}
+        </IonButton> */}
       </IonContent>
     </IonPage>
   );
