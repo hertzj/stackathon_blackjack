@@ -11,7 +11,6 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { stats, logoGameControllerA } from 'ionicons/icons';
-import Home from './pages/Home';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -33,24 +32,17 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import Board from './pages/Board';
 import Tracking from './pages/Tracking';
-import CardExample from './pages/CardSample';
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          {/* <Route path="/tab1" component={Home} exact={true} /> */}
           <Route path="/tab1" component={Board} exact={true} />
           <Route path="/tab2" component={Tracking} exact={true} />
-          {/* <Route path="/tab4" component={CardExample} exact={true} /> */}
           <Route exact path="/" render={() => <Redirect to="/tab1" />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          {/* <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={apps} />
-            <IonLabel>Home</IonLabel>
-          </IonTabButton> */}
           <IonTabButton tab="tab1" href="/tab1">
             <IonIcon icon={logoGameControllerA} />
             <IonLabel>Board</IonLabel>
@@ -59,10 +51,6 @@ const App: React.FC = () => (
             <IonIcon icon={stats} />
             <IonLabel>Tracking</IonLabel>
           </IonTabButton>
-          {/* <IonTabButton tab="tab4" href="/tab4">
-            <IonIcon icon={apps} />
-            <IonLabel>Card</IonLabel>
-          </IonTabButton> */}
         </IonTabBar>
       </IonTabs>
     </IonReactRouter>

@@ -14,7 +14,6 @@ import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { findWinner, setResult } from './result';
-import { trackOptimalPlay } from './tracker';
 
 export type Card = string;
 export type Deck = Card[];

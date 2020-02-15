@@ -4,8 +4,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonFab,
-  IonFabButton,
 } from '@ionic/react';
 import React from 'react';
 import { useSelector } from 'react-redux';

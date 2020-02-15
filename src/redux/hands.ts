@@ -15,7 +15,6 @@ import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { doubleDownAction, getValue, setSplitBJ } from './score';
 import { Deck, Card } from '../utils';
-import { trackOptimalPlay } from './tracker';
 import { setResult } from './result';
 
 interface HandsAction {
