@@ -31,7 +31,7 @@ const initialState: ScoreState = {
   dealerBust: false,
   playerSplitBust: false,
   flippedCard: false,
-  splitBlackJack: true,
+  splitBlackJack: false,
 };
 
 // action creators

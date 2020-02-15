@@ -15,6 +15,11 @@ interface MyState {
   value: number;
 }
 
+const styles = {
+  color: 'tomato',
+  textAlign: 'center',
+};
+
 const Hand: React.FC = props => {
   // @ts-ignore
   const name: string = props.name;
@@ -98,8 +103,26 @@ const Hand: React.FC = props => {
   }
   return (
     <>
-      {playerBust && split === false ? <h1>{name} busted</h1> : null}
-      {splitBust && split === true ? <h1>split hand busted</h1> : null}
+      {playerBust && split === false ? (
+        <h5
+          style={{
+            textAlign: 'center',
+            color: 'tomato',
+          }}
+        >
+          {name} busted
+        </h5>
+      ) : null}
+      {splitBust && split === true ? (
+        <h5
+          style={{
+            textAlign: 'center',
+            color: 'tomato',
+          }}
+        >
+          split hand busted
+        </h5>
+      ) : null}
       <IonGrid fixed>{split ? splitHand() : normalHand()}</IonGrid>
     </>
   );
