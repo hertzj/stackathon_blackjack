@@ -28,8 +28,14 @@ export const findWinner = (): ThunkAction<void, RootState, unknown, Action> => {
     dispatch(flipPlayerCard());
     const playerName = getState().player;
     const playerBust = getState().score.playerBust;
+    const playerSplitBust = getState().score.playerSplitBust;
     const dealerBust = getState().score.dealerBust;
-    if (playerBust) {
+    //@ts-ignore
+    const isSplit = getState().hands.split;
+    if (playerBust && !isSplit) {
+      return dispatch(setResult('dealer'));
+    }
+    if (playerBust && playerSplitBust) {
       return dispatch(setResult('dealer'));
     }
     if (dealerBust) {
@@ -37,7 +43,10 @@ export const findWinner = (): ThunkAction<void, RootState, unknown, Action> => {
     }
     const playerScore = getState().score.playerScore;
     const dealerScore = getState().score.dealerScore;
+    const splitScore = getState().score.playerSplitScore;
     if (playerScore > dealerScore) {
+      dispatch(setResult(playerName));
+    } else if (splitScore > dealerScore) {
       dispatch(setResult(playerName));
     } else {
       dispatch(setResult('dealer'));

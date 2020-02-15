@@ -110,6 +110,59 @@ const Board: React.FC = () => {
     setActiveHand(SPLIT_HAND);
   };
 
+  const buttons = () => {
+    if (result) return null;
+    else {
+      return (
+        <>
+          {dealStatus ? (
+            ''
+          ) : (
+            <IonFab vertical="bottom" horizontal="center" slot="fixed">
+              <IonFabButton onClick={() => startGame()}>Deal me!</IonFabButton>
+            </IonFab>
+          )}
+          <IonFab vertical="bottom" horizontal="start" slot="fixed">
+            {!stayStatus &&
+            dealStatus &&
+            activeHand === NORMAL &&
+            !playerBust ? (
+              <>
+                {doubleDownStatus ? (
+                  <IonFabButton onClick={() => doubleDown()}>
+                    Double Down
+                  </IonFabButton>
+                ) : (
+                  ''
+                )}
+                {offerSplit ? (
+                  <IonFabButton onClick={() => split()}>Split!</IonFabButton>
+                ) : (
+                  ''
+                )}
+                <IonFabButton onClick={() => hit()}>Hit me!</IonFabButton>
+                <IonFabButton onClick={() => stay()}>Stay</IonFabButton>
+              </>
+            ) : (
+              ''
+            )}
+            {isSplit && splitDealStatus && !splitStayStatus && !splitBust ? (
+              <>
+                {splitDoubleDownStatus ? (
+                  <IonFabButton onClick={() => doubleDown()}>
+                    split double down
+                  </IonFabButton>
+                ) : null}
+                <IonFabButton onClick={() => hit()}>split hit</IonFabButton>
+                <IonFabButton onClick={() => stay()}>split stay</IonFabButton>
+              </>
+            ) : null}
+          </IonFab>
+        </>
+      );
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -141,7 +194,8 @@ const Board: React.FC = () => {
             name={SPLIT_HAND}
           />
         ) : null}
-        {dealStatus ? (
+        {buttons()}
+        {/* {dealStatus ? (
           ''
         ) : (
           <IonFab vertical="bottom" horizontal="center" slot="fixed">
@@ -180,7 +234,7 @@ const Board: React.FC = () => {
               <IonFabButton onClick={() => stay()}>split stay</IonFabButton>
             </>
           ) : null}
-        </IonFab>
+        </IonFab> */}
       </IonContent>
     </IonPage>
   );
