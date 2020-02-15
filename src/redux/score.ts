@@ -5,9 +5,11 @@ import {
   UPDATE_SPLIT_SCORE,
   DOUBLE_DOWN,
   SPLIT_HAND,
+  SPLIT_BLACK_JACK,
 } from './constants';
 import { Royals, PlayerCard } from '../utils';
-import { findWinner } from './result';
+import { findWinner, setResult } from './result';
+import { dealerHits } from './deck';
 
 export interface ScoreState {
   playerScore: number;
@@ -17,6 +19,7 @@ export interface ScoreState {
   dealerBust: boolean;
   playerSplitBust: boolean;
   flippedCard: boolean;
+  splitBlackJack: boolean;
 }
 
 const initialState: ScoreState = {
@@ -27,9 +30,10 @@ const initialState: ScoreState = {
   dealerBust: false,
   playerSplitBust: false,
   flippedCard: false,
+  splitBlackJack: true,
 };
 
-// action creator
+// action creators
 export const updateScore = (
   playerName: string,
   score: number,
@@ -63,6 +67,13 @@ export const doubleDownAction = (flippedCard: boolean) => {
   };
 };
 
+export const setSplitBJ = () => {
+  return {
+    type: SPLIT_BLACK_JACK,
+    splitBlackJack: true,
+  };
+};
+
 // thunk
 
 export const getValue = (playerName: string) => {
@@ -78,6 +89,7 @@ export const getValue = (playerName: string) => {
       hand = 'playerHand';
   }
   return (dispatch: any, getState: any) => {
+    const isSplit = getState().hands.split;
     const cards = getState().hands[hand];
     const flippedCard = getState().score.flippedCard;
     const mapRoyalToVal: { [key in Royals]: number } = {
@@ -106,7 +118,11 @@ export const getValue = (playerName: string) => {
     }
     if (value > 21 && flippedCard === false) {
       dispatch(updateScore(playerName, value, true));
-      if (hand === 'playerHand') {
+      if (getState().score.splitBlackJack) {
+        return dispatch(setResult(playerName));
+      }
+      dispatch(dealerHits());
+      if (hand === 'playerHand' && !isSplit) {
         return dispatch(findWinner());
       }
     } else if (value > 21 && playerName === 'dealer') {
@@ -146,6 +162,11 @@ const scoreReducer = (state = initialState, action: any) => {
       return {
         ...state,
         flippedCard: action.flippedCard,
+      };
+    case SPLIT_BLACK_JACK:
+      return {
+        ...state,
+        splitBlackJack: action.splitBlackJack,
       };
     default:
       return state;

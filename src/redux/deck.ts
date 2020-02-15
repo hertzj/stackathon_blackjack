@@ -81,7 +81,7 @@ export const initialDeal = (
       faceUp: true,
     });
     playerCards.push({
-      value: 'CA',
+      value: 'CK',
       faceUp: true,
     });
     if (checkPair(playerCards)) {
