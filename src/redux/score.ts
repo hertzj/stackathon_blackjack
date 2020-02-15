@@ -41,7 +41,7 @@ export const updateScore = (
       score,
       busted,
     };
-  } else if (playerName === 'split') {
+  } else if (playerName === SPLIT_HAND) {
     return {
       type: UPDATE_SPLIT_SCORE,
       score,
@@ -104,17 +104,17 @@ export const getValue = (playerName: string) => {
       value -= 10;
       aces--;
     }
-    // need to complicate this for busting when split
-    // possible create something where if you split I return you out to another function
     if (value > 21 && flippedCard === false) {
       dispatch(updateScore(playerName, value, true));
-      return dispatch(findWinner());
-    }
-    if (value > 21 && playerName === 'dealer') {
+      if (hand === 'playerHand') {
+        return dispatch(findWinner());
+      }
+    } else if (value > 21 && playerName === 'dealer') {
       dispatch(updateScore(playerName, value, true));
-      return dispatch(findWinner());
+      dispatch(findWinner());
+    } else {
+      dispatch(updateScore(playerName, value, false));
     }
-    dispatch(updateScore(playerName, value, false));
   };
 };
 

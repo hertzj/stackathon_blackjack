@@ -6,6 +6,7 @@ import {
   OFFER_SPLIT,
   SPLIT,
   SPLIT_HAND,
+  HIT_SPLIT_PLAYER,
 } from './constants';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -49,6 +50,13 @@ export const hitPlayer = (card: PlayerCard): HandsAction => {
   };
 };
 
+export const hitSplit = (card: PlayerCard): HandsAction => {
+  return {
+    type: HIT_SPLIT_PLAYER,
+    card,
+  };
+};
+
 export const hitDealer = (card: PlayerCard): HandsAction => {
   return {
     type: HIT_DEALER,
@@ -60,6 +68,13 @@ export const offerSplit = (): HandsAction => {
   return {
     type: OFFER_SPLIT,
     offerSplit: true,
+  };
+};
+
+export const declineSplit = (): HandsAction => {
+  return {
+    type: OFFER_SPLIT,
+    offerSplit: false,
   };
 };
 
@@ -168,6 +183,12 @@ const handsReducer = (state = initialState, action: HandsAction) => {
       return {
         ...state,
         playerHand: [...state.playerHand, action.card],
+      };
+    }
+    case HIT_SPLIT_PLAYER: {
+      return {
+        ...state,
+        playerSplitHand: [...state.playerSplitHand, action.card],
       };
     }
     case HIT_DEALER: {

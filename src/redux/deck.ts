@@ -1,4 +1,4 @@
-import { INITIAL_DEAL, DEAL_CARD } from './constants';
+import { INITIAL_DEAL, DEAL_CARD, SPLIT_HAND } from './constants';
 import {
   setPlayerHand,
   setDealerHand,
@@ -6,6 +6,7 @@ import {
   hitPlayer,
   flipCard,
   offerSplit,
+  hitSplit,
 } from './hands';
 import { shuffle, fullDeck, PlayerCard, checkPair } from '../utils';
 import { getValue, doubleDownAction } from './score';
@@ -138,6 +139,21 @@ export const hitParticipant = (
       dispatch(dealCardActionCreator(deck));
       dispatch(getValue('dealer'));
     };
+  } else if (participant === SPLIT_HAND) {
+    return (dispatch, getState) => {
+      const deck: Deck = getState().deck;
+      // @ts-ignore
+      const card: Card = deck.pop();
+      const newCard: PlayerCard = {
+        value: card,
+        faceUp: true,
+      };
+      dispatch(hitSplit(newCard));
+      dispatch(dealCardActionCreator(deck));
+      dispatch(getValue(SPLIT_HAND));
+      // need to have tracking account for split
+      dispatch(trackOptimalPlay());
+    };
   } else {
     // need to deal with splitting
     return (dispatch, getState) => {
@@ -150,7 +166,6 @@ export const hitParticipant = (
       };
       dispatch(hitPlayer(newCard));
       dispatch(dealCardActionCreator(deck));
-      // check if split is true, if so also get value for split (check get value switch)
       dispatch(getValue(getState().player));
       dispatch(trackOptimalPlay());
     };
