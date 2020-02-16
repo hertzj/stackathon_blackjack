@@ -117,12 +117,14 @@ export const getValue = (playerName: string) => {
       value -= 10;
       aces--;
     }
+    // might need to better handle situation where flippedcard is true
     if (value > 21 && flippedCard === false) {
       dispatch(updateScore(playerName, value, true));
       if (getState().score.splitBlackJack) {
         return dispatch(setResult(playerName));
       }
-      dispatch(dealerHits());
+      // not sure why this was here???
+      // dispatch(dealerHits());
       if (hand === 'playerHand' && !isSplit) {
         return dispatch(findWinner());
       }
