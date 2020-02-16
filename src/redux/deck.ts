@@ -14,6 +14,8 @@ import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from './index';
 import { findWinner, setResult } from './result';
+import { TrackerObject } from './tracker';
+import { newPlayToTrack } from './tracker';
 
 export type Card = string;
 export type Deck = Card[];
@@ -94,6 +96,14 @@ export const initialDeal = (
     dispatch(getValue(playerName));
     // dispatch(trackOptimalPlay(playerName));
     if (getState().score.playerScore === 21) {
+      const tracker: TrackerObject = {
+        play: 'win',
+        yourHand: 'blackjack',
+        move: 'won',
+        dealerUpCard: dealerCards[1].value.slice(1),
+        split: false,
+      };
+      dispatch(newPlayToTrack(tracker));
       return dispatch(setResult(playerName));
     }
   };
