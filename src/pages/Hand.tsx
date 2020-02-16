@@ -15,11 +15,6 @@ interface MyState {
   value: number;
 }
 
-const styles = {
-  color: 'tomato',
-  textAlign: 'center',
-};
-
 const Hand: React.FC = props => {
   // @ts-ignore
   const name: string = props.name;

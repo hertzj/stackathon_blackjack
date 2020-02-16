@@ -33,6 +33,7 @@ import { SPLIT_HAND, NORMAL } from '../redux/constants';
 import { trackOptimalPlay } from '../redux/tracker';
 import { NamePopOver } from './NamePopOver';
 import { newGame } from '../redux';
+import { setDeal, setSplitDeal } from '../redux/dealStatus';
 
 const winStyles = {
   color: 'dodgerBlue',
@@ -46,15 +47,21 @@ const loseStyles = {
 
 const Board: React.FC = () => {
   const [stayStatus, setStay] = useState(false);
-  const [dealStatus, setDeal] = useState(false);
+  // const [dealStatus, setDeal] = useState(false);
+  // console.log('deal status is: ', dealStatus);
   const [doubleDownStatus, setDouble] = useState(false);
   const [activeHand, setActiveHand] = useState(NORMAL);
   const [listStatus, setListStatus] = useState(false);
 
   // and if splitting...
   const [splitStayStatus, setSplitStay] = useState(false);
-  const [splitDealStatus, setSplitDeal] = useState(false);
+  // const [splitDealStatus, setSplitDeal] = useState(false);
   const [splitDoubleDownStatus, setSplitDouble] = useState(false);
+
+  //@ts-ignore
+  const dealStatus = useSelector(state => state.deal.dealStatus);
+  //@ts-ignore
+  const splitDealStatus = useSelector(state => state.deal.splitDealStatus);
 
   //@ts-ignore
   const name: string = useSelector(state => state.player);
@@ -78,7 +85,7 @@ const Board: React.FC = () => {
   }
 
   const startGame = () => {
-    setDeal(true);
+    dispatch(setDeal(true));
     setDouble(true);
     dispatch(initialDeal(name));
   };
@@ -131,7 +138,7 @@ const Board: React.FC = () => {
   const split = () => {
     dispatch(trackOptimalPlay(name, 'split', false));
     dispatch(splitThunk());
-    setSplitDeal(true);
+    dispatch(setSplitDeal(true));
     setSplitDouble(true);
     setActiveHand(SPLIT_HAND);
   };
@@ -198,12 +205,12 @@ const Board: React.FC = () => {
 
   const startNewGame = () => {
     dispatch(newGame());
-    setDeal(false);
+    dispatch(setDeal(false));
     setStay(false);
     setDouble(false);
     setActiveHand(NORMAL);
     setSplitStay(false);
-    setSplitDeal(false);
+    dispatch(setSplitDeal(false));
     setSplitDouble(false);
     setListStatus(false);
   };
