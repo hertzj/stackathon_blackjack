@@ -73,16 +73,16 @@ export const initialDeal = (
       }
     }
     // for SPLIT CHECK
-    // playerCards.pop();
-    // playerCards.pop();
-    // playerCards.push({
-    //   value: 'HA',
-    //   faceUp: true,
-    // });
-    // playerCards.push({
-    //   value: 'CA',
-    //   faceUp: true,
-    // });
+    playerCards.pop();
+    playerCards.pop();
+    playerCards.push({
+      value: 'HA',
+      faceUp: true,
+    });
+    playerCards.push({
+      value: 'C2',
+      faceUp: true,
+    });
     // END SPLIT CHECK
     if (checkPair(playerCards)) {
       dispatch(offerSplit());

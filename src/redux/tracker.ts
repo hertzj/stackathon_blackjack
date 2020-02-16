@@ -327,13 +327,13 @@ export const trackOptimalPlay = (
       }
       return card.value;
     });
+    console.log(playerCardValues);
     // might need to add that we aren't already split; coudl get from store
     if (
       playerCardValues.length === 2 &&
       playerCardValues[0].slice(1) === playerCardValues[1].slice(1) &&
       playerHand !== SPLIT_HAND
     ) {
-      console.log('hi');
       let cardVal = playerCardValues[0].slice(1);
       if (cardVal === '0') cardVal = '10';
       const mapCardToIdx = {
@@ -352,7 +352,7 @@ export const trackOptimalPlay = (
       const chartIndexToCheck: string = mapCardToIdx[cardVal];
       //@ts-ignore
       const optimalPlay = optimalPlayChart[dealerCardVal][chartIndexToCheck];
-
+      console.log(cardVal);
       const tracker = {
         play: optimalPlay,
         yourHand: `${cardVal}, ${cardVal}`,
@@ -363,12 +363,20 @@ export const trackOptimalPlay = (
       dispatch(newPlayToTrack(tracker));
     } else if (
       playerCardValues.length === 2 &&
-      playerCardValues.indexOf('A') > -1
+      (playerCardValues[0].indexOf('A') > -1 ||
+        playerCardValues[1].indexOf('A') > -1)
     ) {
-      const aceIndex: number = playerCardValues.indexOf('A');
+      let aceIndex: number;
+      if (playerCardValues[0].indexOf('A') > -1) {
+        aceIndex = 0;
+      } else {
+        aceIndex = 1;
+      }
       let otherIndex: number;
       aceIndex ? (otherIndex = 0) : (otherIndex = 1);
-      const otherCard: string = playerCardValues[otherIndex]; // ie '7' or '10'
+      console.log('otherindex is: ', otherIndex);
+      const otherCard: string = playerCardValues[otherIndex].slice(1); // ie '7' or '10'
+      console.log('other card is: ', otherCard);
       const mapCardToIndex = {
         10: 10,
         9: 10,
@@ -388,7 +396,7 @@ export const trackOptimalPlay = (
       // change to an actual thing
       const tracker = {
         play: optimalPlay,
-        yourHand: `A, ${playerCardValues[otherIndex]}`,
+        yourHand: `A, ${playerCardValues[otherIndex].slice(1)}`,
         move,
         dealerUpCard: dealerCardVal,
         split,
@@ -500,6 +508,7 @@ interface TrackerAction {
 }
 
 const newPlayToTrack = (tracker: TrackerObject) => {
+  console.log(tracker);
   return {
     type: NEW_PLAY_TO_TRACK,
     tracker,
