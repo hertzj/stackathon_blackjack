@@ -30,14 +30,26 @@ const Tracking: React.FC = () => {
         <IonList>
           <IonListHeader>Current Game</IonListHeader>
           {current.map((trackingObj: TrackerObject, idx: number) => {
-            let hand =
-              trackingObj.yourHand.indexOf('A') > -1
-                ? trackingObj.yourHand
-                : Number(trackingObj.yourHand);
+            let hand;
+            if (
+              trackingObj.yourHand.indexOf('A') > -1 ||
+              trackingObj.yourHand.indexOf(',') > -1
+            ) {
+              hand = trackingObj.yourHand;
+            } else {
+              hand = Number(trackingObj.yourHand);
+            }
+
+            // let hand =
+            //   trackingObj.yourHand.indexOf('A') > -1
+            //     ? trackingObj.yourHand
+            //     : Number(trackingObj.yourHand);
             let over16 = false;
             let hasAce = true;
+            let sameValues = true;
             if (typeof hand === 'number') {
               hasAce = false;
+              sameValues = false;
               if (hand > 16) {
                 over16 = true;
               }
@@ -45,7 +57,7 @@ const Tracking: React.FC = () => {
             let splitHand = trackingObj.split;
             return (
               <IonItem key={idx}>
-                You had {hasAce ? `${hand} ` : ''}
+                You had {hasAce || sameValues ? `${hand} ` : ''}
                 {!hasAce && !over16 ? `${hand} ` : ''}
                 {!hasAce && over16 ? `${hand} or greater ` : ''}
                 in your {splitHand ? 'split' : ''} hand and the dealer was

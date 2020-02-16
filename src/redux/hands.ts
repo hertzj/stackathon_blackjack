@@ -16,6 +16,7 @@ import { RootState } from './index';
 import { doubleDownAction, getValue, setSplitBJ } from './score';
 import { Deck, Card } from '../utils';
 import { setResult } from './result';
+import { TrackerObject, newPlayToTrack } from './tracker';
 
 interface HandsAction {
   type: symbol;
@@ -182,13 +183,28 @@ export const splitThunk = (): ThunkAction<void, RootState, unknown, Action> => {
     dispatch(getValue(SPLIT_HAND));
     const normalVal = getState().score.playerScore;
     const splitVal = getState().score.playerSplitScore;
+    const tracker: TrackerObject = {
+      play: 'win',
+      yourHand: 'blackjack',
+      move: 'won',
+      //@ts-ignore
+      dealerUpCard: getState().hands.dealerHand[1].value.slice(1),
+      split: false,
+    };
     if (normalVal === 21 && splitVal === 21) {
+      dispatch(newPlayToTrack(tracker));
+      const newTrack = Object.assign({}, tracker);
+      newTrack.split = true;
+      dispatch(newPlayToTrack(newTrack));
       return dispatch(setResult(`${name} with double BlackJack`));
     }
     if (normalVal === 21) {
+      dispatch(newPlayToTrack(tracker));
       return dispatch(setResult(name));
     }
     if (splitVal === 21) {
+      tracker.split = true;
+      dispatch(newPlayToTrack(tracker));
       dispatch(setSplitBJ());
     }
   };

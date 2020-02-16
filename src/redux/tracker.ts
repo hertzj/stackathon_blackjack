@@ -327,7 +327,6 @@ export const trackOptimalPlay = (
       }
       return card.value;
     });
-    console.log(playerCardValues);
     // might need to add that we aren't already split; coudl get from store
     if (
       playerCardValues.length === 2 &&
@@ -352,7 +351,6 @@ export const trackOptimalPlay = (
       const chartIndexToCheck: string = mapCardToIdx[cardVal];
       //@ts-ignore
       const optimalPlay = optimalPlayChart[dealerCardVal][chartIndexToCheck];
-      console.log(cardVal);
       const tracker = {
         play: optimalPlay,
         yourHand: `${cardVal}, ${cardVal}`,
@@ -374,9 +372,7 @@ export const trackOptimalPlay = (
       }
       let otherIndex: number;
       aceIndex ? (otherIndex = 0) : (otherIndex = 1);
-      console.log('otherindex is: ', otherIndex);
       const otherCard: string = playerCardValues[otherIndex].slice(1); // ie '7' or '10'
-      console.log('other card is: ', otherCard);
       const mapCardToIndex = {
         10: 10,
         9: 10,
@@ -507,16 +503,12 @@ interface TrackerAction {
   tracker: TrackerObject;
 }
 
-const newPlayToTrack = (tracker: TrackerObject) => {
-  console.log(tracker);
+export const newPlayToTrack = (tracker: TrackerObject) => {
   return {
     type: NEW_PLAY_TO_TRACK,
     tracker,
   };
 };
-
-// FIGURE OUT NEW GAME CASE
-// MIGHT NEED TO CHANGE STATE TO AN ARRAY OF ARRAYS
 
 const trackerReducer = (state = initialState, action: TrackerAction) => {
   switch (action.type) {
