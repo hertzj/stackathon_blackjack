@@ -19,5 +19,7 @@ export const OFFER_SPLIT = Symbol('OFFER_SPLIT');
 export const SPLIT = Symbol('SPLIT');
 export const SPLIT_BLACK_JACK = Symbol('SPLIT_BLACK_JACK');
 export const NEW_GAME = Symbol('NEW_GAME');
+export const SET_DEAL_STATUS = Symbol('SET_DEAL_STATUS');
+export const SET_SPLIT_DEAL_STATUS = Symbol('SET_SPLIT_DEAL_STATUS');
 export const SPLIT_HAND = 'splitHand';
 export const NORMAL = 'NORMAL';

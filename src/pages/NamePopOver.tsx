@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { IonPopover, IonButton, IonInput } from '@ionic/react';
 import { useDispatch } from 'react-redux';
 import { setPlayer } from '../redux/player';

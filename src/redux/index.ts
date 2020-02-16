@@ -6,6 +6,7 @@ import scoreReducer from './score';
 import resultReducer from './result';
 import trackerReducer from './tracker';
 import { NEW_GAME } from './constants';
+import dealReducer from './dealStatus';
 
 export const newGame = () => {
   return {
@@ -20,6 +21,7 @@ const appReducer = combineReducers({
   score: scoreReducer,
   result: resultReducer,
   tracker: trackerReducer,
+  deal: dealReducer,
 });
 
 export default appReducer;
