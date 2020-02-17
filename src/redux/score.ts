@@ -123,8 +123,6 @@ export const getValue = (playerName: string) => {
       if (getState().score.splitBlackJack) {
         return dispatch(setResult(playerName));
       }
-      // not sure why this was here???
-      // dispatch(dealerHits());
       if (hand === 'playerHand' && !isSplit) {
         return dispatch(findWinner());
       }
