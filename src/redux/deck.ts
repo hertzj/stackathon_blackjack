@@ -78,11 +78,11 @@ export const initialDeal = (
     // playerCards.pop();
     // playerCards.pop();
     // playerCards.push({
-    //   value: 'HA',
+    //   value: 'H5',
     //   faceUp: true,
     // });
     // playerCards.push({
-    //   value: 'CA',
+    //   value: 'C2',
     //   faceUp: true,
     // });
     // END SPLIT CHECK

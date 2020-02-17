@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonRow, IonGrid, IonCol, IonItem } from '@ionic/react';
-import Card from '../CardTest/Card';
+import Card from '../PlayingCard/Card';
 import { useSelector } from 'react-redux';
 import { SPLIT_HAND } from '../redux/constants';
 

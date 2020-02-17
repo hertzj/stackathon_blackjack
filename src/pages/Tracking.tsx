@@ -45,6 +45,7 @@ const Tracking: React.FC = () => {
             //     ? trackingObj.yourHand
             //     : Number(trackingObj.yourHand);
             let over16 = false;
+            let under9 = false;
             let hasAce = true;
             let sameValues = true;
             if (typeof hand === 'number') {
@@ -52,14 +53,17 @@ const Tracking: React.FC = () => {
               sameValues = false;
               if (hand > 16) {
                 over16 = true;
+              } else if (hand < 9) {
+                under9 = true;
               }
             }
             let splitHand = trackingObj.split;
             return (
               <IonItem key={idx}>
                 You had {hasAce || sameValues ? `${hand} ` : ''}
-                {!hasAce && !over16 ? `${hand} ` : ''}
+                {!hasAce && !over16 && !under9 ? `${hand} ` : ''}
                 {!hasAce && over16 ? `${hand} or greater ` : ''}
+                {!hasAce && under9 ? `${hand} or lower ` : ''}
                 in your {splitHand ? 'split' : ''} hand and the dealer was
                 showing a {trackingObj.dealerUpCard}. The correct move was to{' '}
                 {trackingObj.play}. You {trackingObj.move}.
